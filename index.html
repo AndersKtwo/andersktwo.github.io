@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anders Zoega — Backend & AI Engineer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafafa;
+            --text: #1a1a1a;
+            --muted: #6b6b6b;
+            --accent: #2d2d2d;
+            --border: #e5e5e5;
+            --link: #3d5a80;
+            --tag-bg: #f0f0f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 15px;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 48px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--muted);
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .contact-row a {
+            color: var(--link);
+            text-decoration: none;
+        }
+
+        .contact-row a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 32px 0;
+        }
+
+        /* Section */
+        section {
+            margin-bottom: 36px;
+        }
+
+        h2 {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+        /* Experience */
+        .entry {
+            margin-bottom: 28px;
+        }
+
+        .entry:last-child {
+            margin-bottom: 0;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+
+        .entry-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .entry-date {
+            font-size: 13px;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .entry-company {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .entry-description {
+            font-size: 14px;
+            color: var(--accent);
+            line-height: 1.65;
+        }
+
+        .entry-description li {
+            margin-bottom: 4px;
+            list-style: none;
+            position: relative;
+            padding-left: 14px;
+        }
+
+        .entry-description li::before {
+            content: "–";
+            position: absolute;
+            left: 0;
+            color: var(--muted);
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 12px 24px;
+            font-size: 14px;
+        }
+
+        .skills-label {
+            color: var(--muted);
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .skills-value {
+            color: var(--accent);
+        }
+
+        /* Tags */
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--tag-bg);
+            border-radius: 4px;
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 400;
+        }
+
+        /* Education */
+        .edu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .edu-school {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .edu-date {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .edu-detail {
+            font-size: 14px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* Intro / summary */
+        .summary {
+            font-size: 14.5px;
+            color: var(--accent);
+            line-height: 1.7;
+            max-width: 600px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 24px;
+            }
+
+            .entry-header {
+                flex-direction: column;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .contact-row {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+
+        /* ── Top accent bar ── */
+        body::before {
+            content: "";
+            display: block;
+            height: 3px;
+            background: linear-gradient(90deg, var(--link), #7b8ea8, var(--link));
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* ── Entrance animations ── */
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Header stagger */
+        header h1 {
+            animation: fadeDown 0.6s ease-out both;
+        }
+
+        header .subtitle {
+            animation: fadeDown 0.6s ease-out 0.15s both;
+        }
+
+        header .contact-row {
+            animation: fadeDown 0.6s ease-out 0.3s both;
+        }
+
+        /* Scroll-triggered elements start hidden */
+        .animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Stagger children when parent becomes visible */
+        .animate-stagger .tag,
+        .animate-stagger .skills-label,
+        .animate-stagger .skills-value {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+
+        .animate-stagger.visible .tag,
+        .animate-stagger.visible .skills-label,
+        .animate-stagger.visible .skills-value {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Hover micro-interactions ── */
+        .entry {
+            padding: 16px;
+            margin-left: -16px;
+            margin-right: -16px;
+            border-radius: 8px;
+            border-left: 2px solid transparent;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .entry:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            background: #fff;
+            border-left-color: var(--link);
+        }
+
+        .tag {
+            transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+            cursor: default;
+        }
+
+        .tag:hover {
+            transform: scale(1.06);
+            background: #e4e4e4;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Contact link underline animation */
+        .contact-row a {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-row a::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--link);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-row a:hover {
+            text-decoration: none;
+        }
+
+        .contact-row a:hover::after {
+            transform: translateX(0);
+        }
+
+        /* Divider fade */
+        .divider {
+            border-top: 1px solid var(--border);
+            transition: opacity 0.3s ease;
+            opacity: 0.6;
+        }
+
+        /* ── Skills row hover ── */
+        .skills-label,
+        .skills-value {
+            transition: color 0.2s ease;
+        }
+
+        .skills-grid:hover .skills-label {
+            color: var(--link);
+        }
+
+        /* Print */
+        @media print {
+            body::before {
+                display: none;
+            }
+            body {
+                font-size: 12px;
+            }
+            .container {
+                padding: 20px 0;
+                max-width: 100%;
+            }
+            .animate {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .animate-stagger .tag,
+            .animate-stagger .skills-label,
+            .animate-stagger .skills-value {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .entry {
+                padding: 0;
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <header>
+            <h1>Anders Zoega</h1>
+            <div class="subtitle">Backend & AI Engineer</div>
+            <div class="contact-row">
+                <span>(203) 820-0086</span>
+                <a href="mailto:andzoe@outlook.com">andzoe@outlook.com</a>
+                <a href="https://linkedin.com/in/anders-zoega" target="_blank">LinkedIn</a>
+            </div>
+        </header>
+
+        <section class="animate">
+            <p class="summary">
+                AI-native backend developer who ships production systems fast. Founded an app dev agency serving international clients, building APIs, data pipelines, and cloud infrastructure with Node.js, Python, Supabase, and AWS. Deep AI fluency across the full development lifecycle — from architecture and pair-programming with LLMs to AI-powered product features. Proven ability to independently design and deliver complex integrations (SOAP/REST, payments, real-time sync) in startup environments.
+            </p>
+        </section>
+
+        <hr class="divider">
+
+        <section class="animate">
+            <h2>Experience</h2>
+
+            <div class="entry animate">
+                <div class="entry-header">
+                    <span class="entry-title">Backend Developer & AI Consultant</span>
+                    <span class="entry-date">Sep 2025 — Nov 2025</span>
+                </div>
+                <div class="entry-company">The Zeya App — Miami, FL (Remote)</div>
+                <ul class="entry-description">
+                    <li>Build and maintain backend services and cloud infrastructure for a mobile marketplace with 24,000+ downloads and thousands of daily active users</li>
+                    <li>Manage AWS environments including deployment pipelines, scaling configs, and reliability monitoring for high availability</li>
+                    <li>Develop AI-powered automation systems — content moderation, process optimization — reducing manual review workload</li>
+                    <li>Advise leadership on architecture, scalability, and AI integration strategy for the long-term product roadmap</li>
+                </ul>
+            </div>
+
+            <div class="entry animate">
+                <div class="entry-header">
+                    <span class="entry-title">Founder & Lead Backend Engineer</span>
+                    <span class="entry-date">Aug 2024 — Present</span>
+                </div>
+                <div class="entry-company">Ktwo.ai LLC — Remote</div>
+                <ul class="entry-description">
+                    <li>Founded an AI-driven app development agency building custom iOS/Android apps for SMB clients with React Native, Node.js, and Supabase</li>
+                    <li>Engineered a product sync pipeline integrating DanDomain's SOAP API — enabling a Danish e-commerce client to sync 400+ products (images, SKUs, stock, pricing, descriptions) to Supabase via one-click in a custom CRM</li>
+                    <li>Built a custom CRM and analytics platform from scratch: user downloads, engagement metrics, push campaigns, and order tracking</li>
+                    <li>Integrated Apple Pay, Google Pay, and Stripe; implemented MitID age verification for Danish regulatory compliance</li>
+                    <li>Leveraged AI pair-programming (Claude, Cursor) throughout the development lifecycle to accelerate delivery while maintaining code quality and security standards</li>
+                </ul>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <section class="animate animate-stagger">
+            <h2>Technical Skills</h2>
+
+            <div class="skills-grid">
+                <span class="skills-label">Languages</span>
+                <span class="skills-value">JavaScript, TypeScript, Python, SQL, Swift</span>
+
+                <span class="skills-label">Backend</span>
+                <span class="skills-value">Node.js, Express, Supabase (PostgreSQL), AWS (EC2, S3, Lambda), REST/SOAP APIs, Webhooks, Stripe, n8n</span>
+
+                <span class="skills-label">AI & Tooling</span>
+                <span class="skills-value">Claude Max, Cursor, AI-assisted architecture & code review, prompt engineering, AI workflow automation</span>
+
+                <span class="skills-label">Frontend</span>
+                <span class="skills-value">React Native, React, Xcode</span>
+
+                <span class="skills-label">Platforms</span>
+                <span class="skills-value">Git/GitHub, CI/CD, Apple Pay/Google Pay, MitID (Danish identity verification)</span>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <section class="animate">
+            <h2>Education</h2>
+            <div class="entry">
+                <div class="edu-header">
+                    <span class="edu-school">University of Miami, Herbert Business School</span>
+                    <span class="edu-date">Expected May 2027</span>
+                </div>
+                <div class="edu-detail">
+                    BBA — Major in Artificial Intelligence for Business Technology
+                </div>
+                <div class="edu-detail">
+                    Coursework: AI Cloud Computing, Foundations of AI, Intro to Machine Learning, Programming (Fundamentals & Algorithms)
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <section class="animate">
+            <h2>Additional</h2>
+            <div class="skills-grid">
+                <span class="skills-label">Languages</span>
+                <span class="skills-value">Danish (native), English (fluent)</span>
+
+                <span class="skills-label">Other</span>
+                <span class="skills-value">Licensed Student Pilot (FAA Part 61), Phi Chi Theta Business Fraternity</span>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Scroll-triggered fade-in
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+
+                    // Stagger children if animate-stagger
+                    if (entry.target.classList.contains('animate-stagger')) {
+                        const children = entry.target.querySelectorAll('.tag, .skills-label, .skills-value');
+                        children.forEach((child, i) => {
+                            child.style.transitionDelay = `${i * 0.06}s`;
+                        });
+                    }
+
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
