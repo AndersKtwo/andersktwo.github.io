@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anders Zoega — Backend & AI Engineer</title>
+    <meta name="description" content="AI-native backend developer. Founder of Ktwo.ai. Building APIs, data pipelines, and cloud infrastructure with Node.js, Python, Supabase, and AWS.">
+    <meta property="og:title" content="Anders Zoega — Backend & AI Engineer">
+    <meta property="og:description" content="AI-native backend developer who ships production systems fast. Founder of Ktwo.ai, an app dev agency serving international clients.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://andersktwo.github.io">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Anders Zoega — Backend & AI Engineer">
+    <meta name="twitter:description" content="AI-native backend developer. Founder of Ktwo.ai. APIs, cloud infra, and AI tooling.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80' font-family='Inter,sans-serif' font-weight='600'>AZ</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,6 +23,26 @@
             --border: #e5e5e5;
             --link: #3d5a80;
             --tag-bg: #f0f0f0;
+            --card-bg: #fff;
+            --dot-color: rgba(0, 0, 0, 0.04);
+            --nav-bg: rgba(250, 250, 250, 0.85);
+        }
+
+        [data-theme="dark"] {
+            --bg: #121212;
+            --text: #e8e8e8;
+            --muted: #999;
+            --accent: #d4d4d4;
+            --border: #2a2a2a;
+            --link: #7ba3c9;
+            --tag-bg: #1e1e1e;
+            --card-bg: #1a1a1a;
+            --dot-color: rgba(255, 255, 255, 0.03);
+            --nav-bg: rgba(18, 18, 18, 0.85);
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         * {
@@ -24,12 +53,15 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
+            background-color: var(--bg);
+            background-image: radial-gradient(var(--dot-color) 1px, transparent 1px);
+            background-size: 20px 20px;
             color: var(--text);
             line-height: 1.6;
             font-size: 15px;
             font-weight: 400;
             -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .container {
@@ -319,7 +351,7 @@
         .entry:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            background: #fff;
+            background: var(--card-bg);
             border-left-color: var(--link);
         }
 
@@ -377,6 +409,298 @@
             color: var(--link);
         }
 
+        /* ── Expandable entry details ── */
+        .entry-expand {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            padding: 4px 0;
+            font-size: 13px;
+            color: var(--link);
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: inherit;
+            transition: color 0.2s ease;
+        }
+
+        .entry-expand:hover {
+            color: var(--text);
+        }
+
+        .entry-expand::after {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-right: 1.5px solid currentColor;
+            border-bottom: 1.5px solid currentColor;
+            transform: rotate(-45deg);
+            transition: transform 0.3s ease;
+        }
+
+        .entry-expand.open::after {
+            transform: rotate(45deg);
+        }
+
+        .entry-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .entry-details.open {
+            max-height: 300px;
+            opacity: 1;
+        }
+
+        .entry-details-inner {
+            padding: 12px 0 4px;
+            border-top: 1px solid var(--border);
+            margin-top: 10px;
+        }
+
+        .detail-row {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .detail-label {
+            color: var(--muted);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .detail-value {
+            color: var(--accent);
+        }
+
+        .detail-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .detail-tag {
+            display: inline-block;
+            padding: 2px 10px;
+            background: var(--tag-bg);
+            border-radius: 3px;
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 400;
+        }
+
+        /* ── Project cards ── */
+        .project-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .project-card {
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card-bg);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border-color: var(--link);
+        }
+
+        .project-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .project-desc {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .project-tag {
+            display: inline-block;
+            padding: 2px 10px;
+            background: var(--tag-bg);
+            border-radius: 3px;
+            font-size: 12px;
+            color: var(--accent);
+        }
+
+        /* ── Animation polish: header slide-in ── */
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .animate-slide {
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .animate-slide.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Divider draw animation */
+        .divider-animate {
+            border: none;
+            height: 1px;
+            background: var(--border);
+            margin: 32px 0;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.6s ease-out;
+        }
+
+        .divider-animate.visible {
+            transform: scaleX(1);
+        }
+
+        /* Project card stagger */
+        .animate-stagger .project-card {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+
+        .animate-stagger.visible .project-card {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Theme toggle ── */
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 4px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .theme-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s ease;
+            color: var(--muted);
+        }
+
+        .theme-btn:hover {
+            background: var(--tag-bg);
+        }
+
+        .theme-btn.active {
+            background: var(--tag-bg);
+            color: var(--text);
+        }
+
+        /* ── Sticky nav ── */
+        .sticky-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 900;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+            padding: 0;
+        }
+
+        .sticky-nav.visible {
+            transform: translateY(0);
+        }
+
+        .sticky-nav-inner {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 10px 40px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .sticky-nav-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-right: auto;
+            white-space: nowrap;
+        }
+
+        .sticky-nav a {
+            font-size: 12px;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 4px 0;
+            border-bottom: 1.5px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .sticky-nav a:hover,
+        .sticky-nav a.active {
+            color: var(--link);
+            border-bottom-color: var(--link);
+        }
+
+        /* ── Download button ── */
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--link);
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .download-link:hover {
+            text-decoration: underline;
+        }
+
+        .download-icon {
+            font-size: 11px;
+        }
+
         /* Print */
         @media print {
             body::before {
@@ -404,10 +728,50 @@
                 margin-left: 0;
                 margin-right: 0;
             }
+            .entry-expand {
+                display: none;
+            }
+            .entry-details {
+                max-height: none !important;
+                opacity: 1 !important;
+            }
+            .project-card {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .animate-slide {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .divider-animate {
+                transform: scaleX(1) !important;
+            }
+            .theme-toggle,
+            .sticky-nav {
+                display: none !important;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Theme toggle -->
+    <div class="theme-toggle" aria-label="Theme switcher">
+        <button class="theme-btn" data-theme-choice="light" title="Light mode" onclick="setTheme('light')">&#9788;</button>
+        <button class="theme-btn" data-theme-choice="dark" title="Dark mode" onclick="setTheme('dark')">&#9790;</button>
+        <button class="theme-btn" data-theme-choice="auto" title="Auto (time-based)" onclick="setTheme('auto')">&#9201;</button>
+    </div>
+
+    <!-- Sticky nav -->
+    <nav class="sticky-nav" id="stickyNav">
+        <div class="sticky-nav-inner">
+            <span class="sticky-nav-name">Anders Zoega</span>
+            <a href="#experience">Experience</a>
+            <a href="#projects">Projects</a>
+            <a href="#skills">Skills</a>
+            <a href="#education">Education</a>
+        </div>
+    </nav>
+
     <div class="container">
 
         <header>
@@ -417,6 +781,7 @@
                 <span>(203) 820-0086</span>
                 <a href="mailto:andzoe@outlook.com">andzoe@outlook.com</a>
                 <a href="https://linkedin.com/in/anders-zoega" target="_blank">LinkedIn</a>
+                <a href="Anders_Zoega_Resume.pdf" download class="download-link"><span class="download-icon">&#8681;</span> Resume PDF</a>
             </div>
         </header>
 
@@ -426,10 +791,10 @@
             </p>
         </section>
 
-        <hr class="divider">
+        <hr class="divider divider-animate animate">
 
-        <section class="animate">
-            <h2>Experience</h2>
+        <section class="animate" id="experience">
+            <h2 class="animate-slide">Experience</h2>
 
             <div class="entry animate">
                 <div class="entry-header">
@@ -443,6 +808,24 @@
                     <li>Develop AI-powered automation systems — content moderation, process optimization — reducing manual review workload</li>
                     <li>Advise leadership on architecture, scalability, and AI integration strategy for the long-term product roadmap</li>
                 </ul>
+                <button class="entry-expand" onclick="toggleDetails(this)">More details</button>
+                <div class="entry-details">
+                    <div class="entry-details-inner">
+                        <div class="detail-row">
+                            <span class="detail-label">Stack:</span>
+                            <div class="detail-tags">
+                                <span class="detail-tag">AWS</span>
+                                <span class="detail-tag">Node.js</span>
+                                <span class="detail-tag">Python</span>
+                                <span class="detail-tag">AI/ML</span>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Impact:</span>
+                            <span class="detail-value">24K+ downloads, thousands of daily active users served</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="entry animate">
@@ -458,13 +841,73 @@
                     <li>Integrated Apple Pay, Google Pay, and Stripe; implemented MitID age verification for Danish regulatory compliance</li>
                     <li>Leveraged AI pair-programming (Claude, Cursor) throughout the development lifecycle to accelerate delivery while maintaining code quality and security standards</li>
                 </ul>
+                <button class="entry-expand" onclick="toggleDetails(this)">More details</button>
+                <div class="entry-details">
+                    <div class="entry-details-inner">
+                        <div class="detail-row">
+                            <span class="detail-label">Stack:</span>
+                            <div class="detail-tags">
+                                <span class="detail-tag">React Native</span>
+                                <span class="detail-tag">Node.js</span>
+                                <span class="detail-tag">Supabase</span>
+                                <span class="detail-tag">SOAP API</span>
+                                <span class="detail-tag">Stripe</span>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Impact:</span>
+                            <span class="detail-value">400+ products synced, custom CRM &amp; analytics built from scratch</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <hr class="divider">
+        <hr class="divider divider-animate animate">
 
         <section class="animate animate-stagger">
-            <h2>Technical Skills</h2>
+            <h2 class="animate-slide" id="projects">Projects</h2>
+
+            <div class="project-grid">
+                <div class="project-card">
+                    <div class="project-name">DanDomain E-Commerce Sync</div>
+                    <div class="project-desc">SOAP API pipeline enabling a Danish e-commerce client to sync 400+ products — images, SKUs, stock, pricing, descriptions — to Supabase via one-click in a custom CRM.</div>
+                    <div class="project-tags">
+                        <span class="project-tag">Node.js</span>
+                        <span class="project-tag">SOAP API</span>
+                        <span class="project-tag">Supabase</span>
+                        <span class="project-tag">PostgreSQL</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-name">Custom CRM & Analytics Platform</div>
+                    <div class="project-desc">Full-stack CRM built from scratch for an iOS app client — user download tracking, engagement metrics, push notification campaigns, and order management.</div>
+                    <div class="project-tags">
+                        <span class="project-tag">React Native</span>
+                        <span class="project-tag">Node.js</span>
+                        <span class="project-tag">Supabase</span>
+                        <span class="project-tag">Stripe</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-name">AI Content Moderation System</div>
+                    <div class="project-desc">Multi-agent AI verification system for a mobile marketplace — automated content review and process optimization, reducing manual moderation workload.</div>
+                    <div class="project-tags">
+                        <span class="project-tag">Python</span>
+                        <span class="project-tag">AI/ML</span>
+                        <span class="project-tag">AWS</span>
+                        <span class="project-tag">Node.js</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider divider-animate animate">
+
+        <section class="animate animate-stagger">
+            <h2 class="animate-slide" id="skills">Technical Skills</h2>
 
             <div class="skills-grid">
                 <span class="skills-label">Languages</span>
@@ -484,10 +927,10 @@
             </div>
         </section>
 
-        <hr class="divider">
+        <hr class="divider divider-animate animate">
 
         <section class="animate">
-            <h2>Education</h2>
+            <h2 class="animate-slide" id="education">Education</h2>
             <div class="entry">
                 <div class="edu-header">
                     <span class="edu-school">University of Miami, Herbert Business School</span>
@@ -502,10 +945,10 @@
             </div>
         </section>
 
-        <hr class="divider">
+        <hr class="divider divider-animate animate">
 
         <section class="animate">
-            <h2>Additional</h2>
+            <h2 class="animate-slide">Additional</h2>
             <div class="skills-grid">
                 <span class="skills-label">Languages</span>
                 <span class="skills-value">Danish (native), English (fluent)</span>
@@ -518,26 +961,91 @@
     </div>
 
     <script>
-        // Scroll-triggered fade-in
+        // ── Dark mode ──
+        function getAutoTheme() {
+            const h = new Date().getHours();
+            return (h >= 19 || h < 7) ? 'dark' : 'light';
+        }
+
+        function applyTheme(resolved) {
+            document.documentElement.setAttribute('data-theme', resolved);
+        }
+
+        function setTheme(choice) {
+            localStorage.setItem('theme', choice);
+            const resolved = choice === 'auto' ? getAutoTheme() : choice;
+            applyTheme(resolved);
+            updateToggleButtons(choice);
+        }
+
+        function updateToggleButtons(choice) {
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.themeChoice === choice);
+            });
+        }
+
+        // Init theme on load
+        (function() {
+            const saved = localStorage.getItem('theme') || 'auto';
+            const resolved = saved === 'auto' ? getAutoTheme() : saved;
+            applyTheme(resolved);
+            updateToggleButtons(saved);
+        })();
+
+        // ── Scroll-triggered fade-in ──
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
 
-                    // Stagger children if animate-stagger
                     if (entry.target.classList.contains('animate-stagger')) {
-                        const children = entry.target.querySelectorAll('.tag, .skills-label, .skills-value');
+                        const children = entry.target.querySelectorAll('.tag, .skills-label, .skills-value, .project-card');
                         children.forEach((child, i) => {
-                            child.style.transitionDelay = `${i * 0.06}s`;
+                            child.style.transitionDelay = `${i * 0.08}s`;
                         });
                     }
 
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.15 });
+        }, { threshold: 0.1 });
 
-        document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+        document.querySelectorAll('.animate, .animate-slide, .divider-animate').forEach(el => observer.observe(el));
+
+        // ── Sticky nav ──
+        const stickyNav = document.getElementById('stickyNav');
+        const header = document.querySelector('header');
+
+        const headerObserver = new IntersectionObserver(([entry]) => {
+            stickyNav.classList.toggle('visible', !entry.isIntersecting);
+        }, { threshold: 0 });
+
+        headerObserver.observe(header);
+
+        // Active section highlighting
+        const navLinks = document.querySelectorAll('.sticky-nav a');
+        const sections = document.querySelectorAll('[id]');
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.toggle('active',
+                            link.getAttribute('href') === '#' + entry.target.id);
+                    });
+                }
+            });
+        }, { threshold: 0.3, rootMargin: '-60px 0px -60% 0px' });
+
+        sections.forEach(section => sectionObserver.observe(section));
+
+        // ── Expand/collapse toggle ──
+        function toggleDetails(btn) {
+            const details = btn.nextElementSibling;
+            btn.classList.toggle('open');
+            details.classList.toggle('open');
+            btn.textContent = details.classList.contains('open') ? 'Less details' : 'More details';
+        }
     </script>
 </body>
 </html>
