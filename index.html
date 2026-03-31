@@ -741,6 +741,75 @@
   }
   .chatbot-send:hover { transform: scale(1.05); box-shadow: 0 4px 15px var(--accent-glow); }
 
+  /* ========== EMAIL GATE ========== */
+  .email-gate {
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .email-gate h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  .email-gate p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+  .email-gate-form {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .email-gate-input {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 0.65rem 1rem;
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    font-size: 0.88rem;
+    outline: none;
+    transition: var(--transition);
+  }
+  .email-gate-input:focus { border-color: var(--accent); }
+  .email-gate-input::placeholder { color: var(--text-dim); }
+  .email-gate-btn {
+    padding: 0.65rem 1.5rem;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+  }
+  .email-gate-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px var(--accent-glow);
+  }
+  .email-gate-error {
+    color: var(--accent3);
+    font-size: 0.78rem;
+    margin-top: 0.5rem;
+  }
+  .email-gate-note {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    margin-top: 0.75rem;
+  }
+  .messages-remaining {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-align: right;
+    padding: 0.25rem 1.25rem 0;
+  }
+
   /* ========== CONTACT ========== */
   .contact-grid {
     display: grid;
@@ -873,12 +942,12 @@
       <div class="stat-label">Products Synced via API</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number" data-target="2">0</div>
-      <div class="stat-label">International Clients</div>
+      <div class="stat-number" data-target="4">0</div>
+      <div class="stat-label">Production Apps Shipped</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number" data-target="1">0</div>
-      <div class="stat-label">Founded Company</div>
+      <div class="stat-number" data-target="5" data-suffix="+">0</div>
+      <div class="stat-label">API Integrations Built</div>
     </div>
   </div>
 </section>
@@ -1224,22 +1293,39 @@
         <p>Ask me anything about Anders &mdash; skills, experience, goals, or fit</p>
       </div>
     </div>
-    <div class="chatbot-messages" id="chatMessages">
-      <div class="chat-message bot">
-        <div class="chat-bubble">Hey! I'm AndersBot &mdash; an AI assistant trained on Anders's background, skills, and career goals. Ask me anything about why Anders would be a great fit for your team, what he's built, or what drives him. Try the suggestions below or type your own question!</div>
+
+    <!-- Email gate -->
+    <div class="email-gate" id="emailGate">
+      <h3>Enter your email to start chatting</h3>
+      <p>Ask AndersBot anything about my background, skills, or why I'd be a great fit for your team. Each person gets 20 messages.</p>
+      <div class="email-gate-form">
+        <input type="email" class="email-gate-input" id="emailInput" placeholder="you@company.com" onkeypress="if(event.key==='Enter') submitEmail()">
+        <button class="email-gate-btn" onclick="submitEmail()">Start Chat</button>
       </div>
+      <div class="email-gate-error" id="emailError"></div>
+      <div class="email-gate-note">Your email is only used to limit messages. No spam, ever.</div>
     </div>
-    <div class="chatbot-suggestions" id="chatSuggestions">
-      <button class="suggestion-chip" onclick="askSuggestion(this)">Why should we hire Anders?</button>
-      <button class="suggestion-chip" onclick="askSuggestion(this)">What's his strongest project?</button>
-      <button class="suggestion-chip" onclick="askSuggestion(this)">What can he bring to our team?</button>
-      <button class="suggestion-chip" onclick="askSuggestion(this)">Tell me about his tech stack</button>
-      <button class="suggestion-chip" onclick="askSuggestion(this)">What are his career goals?</button>
-      <button class="suggestion-chip" onclick="askSuggestion(this)">What makes him different?</button>
-    </div>
-    <div class="chatbot-input-area">
-      <input type="text" class="chatbot-input" id="chatInput" placeholder="Ask about Anders..." onkeypress="if(event.key==='Enter') sendMessage()">
-      <button class="chatbot-send" onclick="sendMessage()">&#10148;</button>
+
+    <!-- Chat (hidden until email submitted) -->
+    <div id="chatArea" style="display: none;">
+      <div class="chatbot-messages" id="chatMessages">
+        <div class="chat-message bot">
+          <div class="chat-bubble">Hey! I'm AndersBot &mdash; an AI assistant trained on Anders's background, skills, and career goals. Ask me anything about why Anders would be a great fit for your team, what he's built, or what drives him. Try the suggestions below or type your own question!</div>
+        </div>
+      </div>
+      <div class="messages-remaining" id="messagesRemaining">20 messages remaining</div>
+      <div class="chatbot-suggestions" id="chatSuggestions">
+        <button class="suggestion-chip" onclick="askSuggestion(this)">Why should we hire Anders?</button>
+        <button class="suggestion-chip" onclick="askSuggestion(this)">What's his strongest project?</button>
+        <button class="suggestion-chip" onclick="askSuggestion(this)">What can he bring to our team?</button>
+        <button class="suggestion-chip" onclick="askSuggestion(this)">Tell me about his tech stack</button>
+        <button class="suggestion-chip" onclick="askSuggestion(this)">What are his career goals?</button>
+        <button class="suggestion-chip" onclick="askSuggestion(this)">What makes him different?</button>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" class="chatbot-input" id="chatInput" placeholder="Ask about Anders..." onkeypress="if(event.key==='Enter') sendMessage()">
+        <button class="chatbot-send" onclick="sendMessage()">&#10148;</button>
+      </div>
     </div>
   </div>
 </section>
@@ -1413,18 +1499,34 @@ function toggleProject(card) {
 // ========== CHATBOT ==========
 const EDGE_FN_URL = 'https://kguucauoxscxreaewiwv.supabase.co/functions/v1/resume-chat';
 let chatHistory = [];
+let userEmail = '';
+
+function submitEmail() {
+  const input = document.getElementById('emailInput');
+  const errorDiv = document.getElementById('emailError');
+  const email = input.value.trim();
+
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    errorDiv.textContent = 'Please enter a valid email address.';
+    return;
+  }
+
+  userEmail = email;
+  errorDiv.textContent = '';
+  document.getElementById('emailGate').style.display = 'none';
+  document.getElementById('chatArea').style.display = 'block';
+}
 
 async function sendMessage() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
-  if (!text) return;
+  if (!text || !userEmail) return;
 
   addMessage(text, 'user');
   input.value = '';
 
   document.getElementById('chatSuggestions').style.display = 'none';
 
-  // Show typing indicator
   const typingDiv = document.createElement('div');
   typingDiv.className = 'chat-message bot';
   typingDiv.innerHTML = '<div class="chat-bubble"><div class="chat-typing"><span></span><span></span><span></span></div></div>';
@@ -1435,7 +1537,7 @@ async function sendMessage() {
     const res = await fetch(EDGE_FN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text, history: chatHistory }),
+      body: JSON.stringify({ message: text, email: userEmail, history: chatHistory }),
     });
 
     typingDiv.remove();
@@ -1445,10 +1547,23 @@ async function sendMessage() {
     const data = await res.json();
     const reply = data.reply;
 
-    // Track conversation history
+    // Update remaining counter
+    if (data.remaining !== undefined) {
+      const remainingEl = document.getElementById('messagesRemaining');
+      remainingEl.textContent = data.remaining + ' message' + (data.remaining !== 1 ? 's' : '') + ' remaining';
+      if (data.remaining <= 3) remainingEl.style.color = 'var(--accent3)';
+    }
+
+    // If limit reached, disable input
+    if (data.error === 'limit_reached') {
+      addMessage(formatMarkdown(reply), 'bot');
+      document.querySelector('.chatbot-input-area').style.display = 'none';
+      document.getElementById('messagesRemaining').textContent = 'Message limit reached';
+      return;
+    }
+
     chatHistory.push({ role: 'user', content: text });
     chatHistory.push({ role: 'assistant', content: reply });
-    // Keep history manageable
     if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
 
     addMessage(formatMarkdown(reply), 'bot');
