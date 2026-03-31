@@ -758,9 +758,14 @@
   }
   .email-gate-form {
     display: flex;
+    flex-direction: column;
     gap: 0.5rem;
-    max-width: 400px;
+    max-width: 360px;
     margin: 0 auto;
+  }
+  .email-gate-row {
+    display: flex;
+    gap: 0.5rem;
   }
   .email-gate-input {
     flex: 1;
@@ -1299,7 +1304,11 @@
       <h3>Enter your email to start chatting</h3>
       <p>Ask AndersBot anything about my background, skills, or why I'd be a great fit for your team. Each person gets 20 messages.</p>
       <div class="email-gate-form">
-        <input type="email" class="email-gate-input" id="emailInput" placeholder="you@company.com" onkeypress="if(event.key==='Enter') submitEmail()">
+        <input type="email" class="email-gate-input" id="emailInput" placeholder="you@company.com *" onkeypress="if(event.key==='Enter') submitEmail()">
+        <div class="email-gate-row">
+          <input type="text" class="email-gate-input" id="nameInput" placeholder="Your name (optional)">
+          <input type="text" class="email-gate-input" id="companyInput" placeholder="Company (optional)">
+        </div>
         <button class="email-gate-btn" onclick="submitEmail()">Start Chat</button>
       </div>
       <div class="email-gate-error" id="emailError"></div>
@@ -1500,6 +1509,8 @@ function toggleProject(card) {
 const EDGE_FN_URL = 'https://kguucauoxscxreaewiwv.supabase.co/functions/v1/resume-chat';
 let chatHistory = [];
 let userEmail = '';
+let userName = '';
+let userCompany = '';
 
 function submitEmail() {
   const input = document.getElementById('emailInput');
@@ -1512,6 +1523,8 @@ function submitEmail() {
   }
 
   userEmail = email;
+  userName = document.getElementById('nameInput').value.trim();
+  userCompany = document.getElementById('companyInput').value.trim();
   errorDiv.textContent = '';
   document.getElementById('emailGate').style.display = 'none';
   document.getElementById('chatArea').style.display = 'block';
@@ -1537,7 +1550,7 @@ async function sendMessage() {
     const res = await fetch(EDGE_FN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text, email: userEmail, history: chatHistory }),
+      body: JSON.stringify({ message: text, email: userEmail, name: userName, company: userCompany, history: chatHistory }),
     });
 
     typingDiv.remove();
