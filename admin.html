@@ -474,6 +474,59 @@
   }
   .preview-open-btn:hover { border-color: var(--accent); color: var(--accent); }
 
+  /* DEVICE LIST */
+  .device-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: border-color 0.2s;
+  }
+  .device-item.is-current { border-color: rgba(0,204,136,0.3); }
+  .device-item-info { display: flex; align-items: center; gap: 0.75rem; flex: 1; min-width: 0; }
+  .device-item-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .device-item-details { min-width: 0; }
+  .device-item-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .device-item-name .current-badge {
+    font-size: 0.65rem;
+    background: rgba(0,204,136,0.15);
+    color: #00cc88;
+    padding: 0.1rem 0.45rem;
+    border-radius: 50px;
+    font-weight: 600;
+  }
+  .device-item-meta {
+    font-size: 0.72rem;
+    color: var(--text3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .device-item-actions { display: flex; gap: 0.35rem; flex-shrink: 0; margin-left: 0.5rem; }
+  .device-rename-btn, .device-remove-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text3);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .device-rename-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .device-remove-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+
   /* PROFILE EDITOR */
   .profile-section {
     background: var(--card);
@@ -777,10 +830,16 @@
         <div class="settings-msg" id="settingsMsg"></div>
       </div>
       <div class="settings-card" style="margin-top: 1.5rem;">
-        <h3>My Browser</h3>
-        <p class="desc">Mark this browser as yours so your visits are separated from real traffic in analytics.</p>
-        <div id="ownerStatus" style="font-size: 0.82rem; color: var(--text2); margin-bottom: 0.75rem;"></div>
-        <button class="settings-btn" onclick="markAsOwner()">This Is My Browser</button>
+        <h3>My Devices</h3>
+        <p class="desc">Mark browsers/devices as yours so your visits are separated from real traffic in analytics.</p>
+        <div id="devicesList" style="margin-bottom: 1rem;"></div>
+        <div style="display:flex; gap:0.5rem; align-items:end;">
+          <div style="flex:1;">
+            <label class="field-label" style="font-size:0.7rem; color:var(--text3); margin-bottom:0.2rem; display:block;">Device Name</label>
+            <input class="field-input" id="deviceName" placeholder="e.g. Main Laptop, iPhone, Work PC" style="margin-bottom:0; font-size:0.82rem;">
+          </div>
+          <button class="settings-btn" onclick="markAsOwner()" style="white-space:nowrap; padding:0.6rem 1.2rem;">+ Add This Device</button>
+        </div>
         <div class="settings-msg" id="ownerMsg"></div>
       </div>
     </div>
@@ -1150,7 +1209,7 @@ async function loadAnalytics(token) {
     }
 
     // Update owner status in settings
-    updateOwnerStatus(analyticsData.ownerVisitorIds || []);
+    loadOwnerDevices(analyticsData);
 
     reRenderAnalytics();
     renderLeads(analyticsData.chatSessions);
@@ -1328,27 +1387,100 @@ function togglePassword(inputId, btn) {
   }
 }
 
-// ========== OWNER TRACKING ==========
-function updateOwnerStatus(ownerIds) {
-  const statusEl = document.getElementById('ownerStatus');
-  // Get this browser's visitor ID from the resume site's localStorage key
-  const myId = localStorage.getItem('_vid');
-  if (!statusEl) return;
+// ========== OWNER DEVICE TRACKING ==========
+let ownerDevices = []; // [{id, name, userAgent, addedAt}]
 
-  if (!myId) {
-    statusEl.innerHTML = 'No visitor ID found. Visit your <a href="/" target="_blank" style="color:var(--accent);">resume site</a> first, then come back here.';
-  } else if (ownerIds.includes(myId)) {
-    statusEl.innerHTML = '✓ This browser is marked as yours. <span style="color:var(--text3);">ID: ' + myId.substring(0, 8) + '...</span>';
-    statusEl.style.color = '#00cc88';
-  } else {
-    statusEl.innerHTML = 'This browser is not marked yet. <span style="color:var(--text3);">ID: ' + myId.substring(0, 8) + '...</span>';
-    statusEl.style.color = 'var(--text2)';
+function getDeviceIcon(ua) {
+  if (!ua) return '🖥️';
+  const l = ua.toLowerCase();
+  if (l.includes('iphone') || l.includes('android') && l.includes('mobile')) return '📱';
+  if (l.includes('ipad') || l.includes('tablet')) return '📋';
+  if (l.includes('macintosh') || l.includes('mac os')) return '💻';
+  if (l.includes('windows')) return '🖥️';
+  if (l.includes('linux')) return '🐧';
+  return '🌐';
+}
+
+function getDeviceSummary(ua) {
+  if (!ua) return 'Unknown device';
+  const l = ua.toLowerCase();
+  let browser = 'Unknown';
+  if (l.includes('chrome') && !l.includes('edg')) browser = 'Chrome';
+  else if (l.includes('safari') && !l.includes('chrome')) browser = 'Safari';
+  else if (l.includes('firefox')) browser = 'Firefox';
+  else if (l.includes('edg')) browser = 'Edge';
+  let os = 'Unknown';
+  if (l.includes('mac os') || l.includes('macintosh')) os = 'macOS';
+  else if (l.includes('windows')) os = 'Windows';
+  else if (l.includes('iphone')) os = 'iPhone';
+  else if (l.includes('ipad')) os = 'iPad';
+  else if (l.includes('android')) os = 'Android';
+  else if (l.includes('linux')) os = 'Linux';
+  return browser + ' on ' + os;
+}
+
+function renderDevicesList() {
+  const container = document.getElementById('devicesList');
+  const myId = localStorage.getItem('_vid');
+
+  if (!ownerDevices.length) {
+    container.innerHTML = '<p style="font-size:0.8rem; color:var(--text3); padding:0.5rem 0;">No devices marked yet.</p>';
+    return;
   }
+
+  container.innerHTML = ownerDevices.map((d, i) => {
+    const isCurrent = d.id === myId;
+    const icon = getDeviceIcon(d.userAgent);
+    const meta = getDeviceSummary(d.userAgent);
+    const added = d.addedAt ? new Date(d.addedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+    return `
+      <div class="device-item ${isCurrent ? 'is-current' : ''}">
+        <div class="device-item-info">
+          <span class="device-item-icon">${icon}</span>
+          <div class="device-item-details">
+            <div class="device-item-name">
+              ${escHtml(d.name || 'Unnamed Device')}
+              ${isCurrent ? '<span class="current-badge">THIS DEVICE</span>' : ''}
+            </div>
+            <div class="device-item-meta">${escHtml(meta)}${added ? ' · Added ' + added : ''}</div>
+          </div>
+        </div>
+        <div class="device-item-actions">
+          <button class="device-rename-btn" onclick="renameDevice(${i})">Rename</button>
+          <button class="device-remove-btn" onclick="removeDevice(${i})">Remove</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function saveOwnerDevices() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return false;
+
+  // Save the devices list
+  const res1 = await fetch(`${SUPABASE_URL}/functions/v1/site-content`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+    body: JSON.stringify({ key: 'owner_devices', value: ownerDevices }),
+  });
+
+  // Also save flat ID array for the analytics edge function
+  const ids = ownerDevices.map(d => d.id);
+  const res2 = await fetch(`${SUPABASE_URL}/functions/v1/site-content`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+    body: JSON.stringify({ key: 'owner_visitor_ids', value: ids }),
+  });
+
+  return res1.ok && res2.ok;
 }
 
 async function markAsOwner() {
   const msgEl = document.getElementById('ownerMsg');
   const myId = localStorage.getItem('_vid');
+  const nameInput = document.getElementById('deviceName');
+  const deviceName = nameInput.value.trim();
 
   if (!myId) {
     msgEl.textContent = 'No visitor ID found. Visit your resume site first to generate one.';
@@ -1356,52 +1488,78 @@ async function markAsOwner() {
     return;
   }
 
-  // Get fresh token
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) {
-    msgEl.textContent = 'Session expired. Please log in again.';
+  if (!deviceName) {
+    msgEl.textContent = 'Please enter a name for this device.';
     msgEl.className = 'settings-msg error';
     return;
   }
 
-  // Fetch current owner IDs
-  let currentIds = [];
-  try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/site-content`);
-    if (res.ok) {
-      const content = await res.json();
-      currentIds = content.owner_visitor_ids || [];
-    }
-  } catch {}
-
-  if (currentIds.includes(myId)) {
-    msgEl.textContent = 'This browser is already marked as yours.';
-    msgEl.className = 'settings-msg success';
+  if (ownerDevices.some(d => d.id === myId)) {
+    msgEl.textContent = 'This browser is already in your devices list.';
+    msgEl.className = 'settings-msg error';
     return;
   }
 
-  currentIds.push(myId);
+  ownerDevices.push({
+    id: myId,
+    name: deviceName,
+    userAgent: navigator.userAgent,
+    addedAt: new Date().toISOString(),
+  });
 
-  // Save updated list
-  try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/site-content`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.access_token}`,
-      },
-      body: JSON.stringify({ key: 'owner_visitor_ids', value: currentIds }),
-    });
-
-    if (!res.ok) throw new Error('Save failed');
-
-    msgEl.textContent = '✓ Browser marked as yours! Refresh analytics to see filtered data.';
+  const ok = await saveOwnerDevices();
+  if (ok) {
+    msgEl.textContent = '✓ Device added! Refresh analytics to see filtered data.';
     msgEl.className = 'settings-msg success';
-    updateOwnerStatus(currentIds);
-  } catch (err) {
-    msgEl.textContent = 'Failed to save: ' + err.message;
+    nameInput.value = '';
+    renderDevicesList();
+  } else {
+    ownerDevices.pop();
+    msgEl.textContent = 'Failed to save. Try again.';
     msgEl.className = 'settings-msg error';
   }
+}
+
+async function renameDevice(index) {
+  const device = ownerDevices[index];
+  const newName = prompt('Rename device:', device.name || '');
+  if (newName === null || !newName.trim()) return;
+
+  device.name = newName.trim();
+  const ok = await saveOwnerDevices();
+  if (ok) {
+    renderDevicesList();
+  } else {
+    alert('Failed to save. Try again.');
+  }
+}
+
+async function removeDevice(index) {
+  const device = ownerDevices[index];
+  if (!confirm('Remove "' + (device.name || 'Unnamed Device') + '" from your devices?')) return;
+
+  ownerDevices.splice(index, 1);
+  const ok = await saveOwnerDevices();
+  if (ok) {
+    renderDevicesList();
+    const msgEl = document.getElementById('ownerMsg');
+    msgEl.textContent = '✓ Device removed. Refresh analytics to update.';
+    msgEl.className = 'settings-msg success';
+  } else {
+    alert('Failed to save. Try again.');
+  }
+}
+
+function loadOwnerDevices(data) {
+  // Load devices from analytics response
+  if (data.ownerDevices) {
+    ownerDevices = data.ownerDevices;
+  } else {
+    // Backwards compat: if only flat IDs exist, convert them
+    const ids = data.ownerVisitorIds || [];
+    ownerDevices = ids.map(id => ({ id, name: 'Unknown Device', userAgent: '', addedAt: '' }));
+  }
+  renderDevicesList();
 }
 
 // ========== PROFILE EDITOR ==========
