@@ -715,6 +715,13 @@
 
     <!-- OVERVIEW TAB -->
     <div class="tab-content active" id="tab-overview">
+      <div id="ownerFilterBar" style="display:none; margin-bottom:1rem; display:flex; align-items:center; gap:0.75rem;">
+        <label style="font-size:0.8rem; color:var(--text2); display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
+          <input type="checkbox" id="excludeOwner" onchange="reRenderAnalytics()" checked style="accent-color:var(--accent);">
+          Hide my own visits
+        </label>
+        <span id="ownerVisitCount" style="font-size:0.75rem; color:var(--text3);"></span>
+      </div>
       <div class="stat-row" id="overviewStats"></div>
     </div>
 
@@ -768,6 +775,13 @@
         <input type="password" id="confirmPassword" placeholder="Confirm new password" onkeypress="if(event.key==='Enter') changePassword()">
         <button class="settings-btn" onclick="changePassword()">Update Password</button>
         <div class="settings-msg" id="settingsMsg"></div>
+      </div>
+      <div class="settings-card" style="margin-top: 1.5rem;">
+        <h3>My Browser</h3>
+        <p class="desc">Mark this browser as yours so your visits are separated from real traffic in analytics.</p>
+        <div id="ownerStatus" style="font-size: 0.82rem; color: var(--text2); margin-bottom: 0.75rem;"></div>
+        <button class="settings-btn" onclick="markAsOwner()">This Is My Browser</button>
+        <div class="settings-msg" id="ownerMsg"></div>
       </div>
     </div>
 
@@ -1112,6 +1126,8 @@ function updateTimestamp() {
   document.getElementById('lastUpdated').textContent = 'Updated ' + now.toLocaleTimeString();
 }
 
+let analyticsData = null; // cached for toggle re-render
+
 async function loadAnalytics(token) {
   const loadingEl = document.getElementById('loadingMsg');
   try {
@@ -1120,19 +1136,41 @@ async function loadAnalytics(token) {
     });
 
     if (!res.ok) throw new Error('Failed to load');
-    const data = await res.json();
+    analyticsData = await res.json();
     loadingEl.style.display = 'none';
-    renderOverview(data);
-    renderLeads(data.chatSessions);
-    renderTraffic(data.analytics);
+
+    // Show filter toggle if owner IDs are configured
+    const hasOwner = analyticsData.ownerVisitorIds && analyticsData.ownerVisitorIds.length > 0;
+    const filterBar = document.getElementById('ownerFilterBar');
+    if (hasOwner) {
+      filterBar.style.display = 'flex';
+      document.getElementById('ownerVisitCount').textContent = `(${analyticsData.ownerViews} of your views filtered)`;
+    } else {
+      filterBar.style.display = 'none';
+    }
+
+    // Update owner status in settings
+    updateOwnerStatus(analyticsData.ownerVisitorIds || []);
+
+    reRenderAnalytics();
+    renderLeads(analyticsData.chatSessions);
     updateTimestamp();
   } catch (err) {
     loadingEl.textContent = 'Failed to load analytics. Try refreshing.';
   }
 }
 
-function renderOverview(data) {
-  const { analytics, costs, chatSessions } = data;
+function reRenderAnalytics() {
+  if (!analyticsData) return;
+  const exclude = document.getElementById('excludeOwner').checked;
+  const hasOwner = analyticsData.ownerVisitorIds && analyticsData.ownerVisitorIds.length > 0;
+  const analytics = (exclude && hasOwner) ? analyticsData.filteredAnalytics : analyticsData.analytics;
+  renderOverview(analyticsData, analytics);
+  renderTraffic(analytics);
+}
+
+function renderOverview(data, analytics) {
+  const { costs, chatSessions } = data;
   const totalMessages = chatSessions.reduce((s, c) => s + c.message_count, 0);
 
   document.getElementById('overviewStats').innerHTML = `
@@ -1287,6 +1325,82 @@ function togglePassword(inputId, btn) {
   } else {
     input.type = 'password';
     btn.style.color = '';
+  }
+}
+
+// ========== OWNER TRACKING ==========
+function updateOwnerStatus(ownerIds) {
+  const statusEl = document.getElementById('ownerStatus');
+  // Get this browser's visitor ID from the resume site's localStorage key
+  const myId = localStorage.getItem('_vid');
+  if (!statusEl) return;
+
+  if (!myId) {
+    statusEl.innerHTML = 'No visitor ID found. Visit your <a href="/" target="_blank" style="color:var(--accent);">resume site</a> first, then come back here.';
+  } else if (ownerIds.includes(myId)) {
+    statusEl.innerHTML = '✓ This browser is marked as yours. <span style="color:var(--text3);">ID: ' + myId.substring(0, 8) + '...</span>';
+    statusEl.style.color = '#00cc88';
+  } else {
+    statusEl.innerHTML = 'This browser is not marked yet. <span style="color:var(--text3);">ID: ' + myId.substring(0, 8) + '...</span>';
+    statusEl.style.color = 'var(--text2)';
+  }
+}
+
+async function markAsOwner() {
+  const msgEl = document.getElementById('ownerMsg');
+  const myId = localStorage.getItem('_vid');
+
+  if (!myId) {
+    msgEl.textContent = 'No visitor ID found. Visit your resume site first to generate one.';
+    msgEl.className = 'settings-msg error';
+    return;
+  }
+
+  // Get fresh token
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    msgEl.textContent = 'Session expired. Please log in again.';
+    msgEl.className = 'settings-msg error';
+    return;
+  }
+
+  // Fetch current owner IDs
+  let currentIds = [];
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/site-content`);
+    if (res.ok) {
+      const content = await res.json();
+      currentIds = content.owner_visitor_ids || [];
+    }
+  } catch {}
+
+  if (currentIds.includes(myId)) {
+    msgEl.textContent = 'This browser is already marked as yours.';
+    msgEl.className = 'settings-msg success';
+    return;
+  }
+
+  currentIds.push(myId);
+
+  // Save updated list
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/site-content`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ key: 'owner_visitor_ids', value: currentIds }),
+    });
+
+    if (!res.ok) throw new Error('Save failed');
+
+    msgEl.textContent = '✓ Browser marked as yours! Refresh analytics to see filtered data.';
+    msgEl.className = 'settings-msg success';
+    updateOwnerStatus(currentIds);
+  } catch (err) {
+    msgEl.textContent = 'Failed to save: ' + err.message;
+    msgEl.className = 'settings-msg error';
   }
 }
 
