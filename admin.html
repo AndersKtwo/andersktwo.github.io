@@ -70,6 +70,25 @@
   }
   .login-box input:focus { border-color: var(--accent); }
   .login-box input::placeholder { color: var(--text3); }
+  .password-wrapper {
+    position: relative;
+  }
+  .password-wrapper input { padding-right: 2.5rem; }
+  .toggle-pw {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .toggle-pw:hover { color: var(--accent); }
   .login-btn {
     width: 100%;
     padding: 0.75rem;
@@ -141,6 +160,25 @@
   }
   .tab-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
   .tab-link.active { color: var(--accent); background: var(--accent-dim); }
+  .top-bar-right { display: flex; align-items: center; gap: 0.5rem; }
+  .refresh-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .refresh-btn.spinning .refresh-icon { animation: spin 0.8s linear; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .refresh-icon { display: inline-block; font-size: 0.9rem; }
+  .last-updated { font-size: 0.7rem; color: var(--text3); }
   .logout-btn {
     background: none;
     border: 1px solid var(--border);
@@ -333,7 +371,10 @@
     <h1>Admin Dashboard</h1>
     <p class="sub">andersktwo.github.io</p>
     <input type="email" id="loginEmail" placeholder="Email" value="andzoe@outlook.com">
-    <input type="password" id="loginPassword" placeholder="Password" onkeypress="if(event.key==='Enter') login()">
+    <div class="password-wrapper">
+      <input type="password" id="loginPassword" placeholder="Password" onkeypress="if(event.key==='Enter') login()">
+      <button class="toggle-pw" onclick="togglePassword('loginPassword', this)" type="button" title="Show password">&#128065;</button>
+    </div>
     <button class="login-btn" onclick="login()">Sign In</button>
     <div class="login-error" id="loginError"></div>
     <div class="temp-notice">Temporary password: <strong>TempPass2026</strong><br>Change it in Settings after logging in.</div>
@@ -352,7 +393,11 @@
         <button class="tab-link" onclick="switchTab('settings')">Settings</button>
       </div>
     </div>
-    <button class="logout-btn" onclick="logout()">Log Out</button>
+    <div class="top-bar-right">
+      <span class="last-updated" id="lastUpdated"></span>
+      <button class="refresh-btn" id="refreshBtn" onclick="refreshData()"><span class="refresh-icon">&#8635;</span> Refresh</button>
+      <button class="logout-btn" onclick="logout()">Log Out</button>
+    </div>
   </div>
 
   <div class="content">
@@ -457,15 +502,37 @@ async function logout() {
   document.getElementById('dashboard').classList.remove('active');
 }
 
+let currentToken = '';
+
 async function showDashboard(session) {
   document.getElementById('loginPage').classList.add('hidden');
   document.getElementById('dashboard').classList.add('active');
+  currentToken = session.access_token;
 
   // Remove temp password notice after first login
   const notice = document.querySelector('.temp-notice');
   if (notice) notice.remove();
 
-  await loadAnalytics(session.access_token);
+  await loadAnalytics(currentToken);
+}
+
+async function refreshData() {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+  btn.disabled = true;
+
+  // Get fresh token in case it expired
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) currentToken = session.access_token;
+
+  await loadAnalytics(currentToken);
+  btn.classList.remove('spinning');
+  btn.disabled = false;
+}
+
+function updateTimestamp() {
+  const now = new Date();
+  document.getElementById('lastUpdated').textContent = 'Updated ' + now.toLocaleTimeString();
 }
 
 async function loadAnalytics(token) {
@@ -481,6 +548,7 @@ async function loadAnalytics(token) {
     renderOverview(data);
     renderLeads(data.chatSessions);
     renderTraffic(data.analytics);
+    updateTimestamp();
   } catch (err) {
     loadingEl.textContent = 'Failed to load analytics. Try refreshing.';
   }
@@ -627,6 +695,17 @@ function escHtml(s) {
   const d = document.createElement('div');
   d.textContent = s;
   return d.innerHTML;
+}
+
+function togglePassword(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.style.color = 'var(--accent)';
+  } else {
+    input.type = 'password';
+    btn.style.color = '';
+  }
 }
 </script>
 </body>
