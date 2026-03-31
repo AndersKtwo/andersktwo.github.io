@@ -1492,6 +1492,165 @@ function animateNumber(el, start, end, duration, suffix) {
   requestAnimationFrame(update);
 }
 
+// ========== DYNAMIC CONTENT ==========
+async function loadSiteContent() {
+  try {
+    const res = await fetch('https://kguucauoxscxreaewiwv.supabase.co/functions/v1/site-content');
+    if (!res.ok) return; // fallback to hardcoded
+    const data = await res.json();
+
+    // Header
+    if (data.header) {
+      const h = data.header;
+      document.querySelector('.hero-badge').innerHTML = '<span class="pulse"></span> ' + escText(h.badge);
+      document.querySelector('.hero h1').innerHTML = 'Hi, I\'m <span class="gradient-text">' + escText(h.name) + '</span>';
+      document.querySelector('.hero .subtitle').textContent = h.subtitle;
+      document.querySelector('.hero .tagline').textContent = h.tagline;
+      const pdfLink = document.querySelector('a[href*="Resume"]');
+      if (pdfLink && h.resumePdf) pdfLink.href = h.resumePdf;
+    }
+
+    // Stats
+    if (data.stats) {
+      const statsBar = document.querySelector('.stats-bar');
+      statsBar.innerHTML = data.stats.map(s => `
+        <div class="stat-card">
+          <div class="stat-number" data-target="${escAttr(s.number)}" data-suffix="${escAttr(s.suffix)}" >0</div>
+          <div class="stat-label">${escText(s.label)}</div>
+        </div>
+      `).join('');
+    }
+
+    // About
+    if (data.about) {
+      const a = data.about;
+      document.querySelector('#about .section-label').textContent = a.sectionLabel;
+      document.querySelector('#about .section-title').textContent = a.sectionTitle;
+      document.querySelector('.about-text').innerHTML = a.paragraphs.map(p => '<p>' + p + '</p>').join('');
+      document.querySelector('.about-details').innerHTML = a.details.map(d => `
+        <div class="detail-item">
+          <span class="detail-label">${escText(d.label)}</span>
+          <span class="detail-value">${escText(d.value)}</span>
+        </div>
+      `).join('');
+    }
+
+    // Skills
+    if (data.skills) {
+      const sk = data.skills;
+      document.querySelector('#skills .section-label').textContent = sk.sectionLabel;
+      document.querySelector('#skills .section-title').textContent = sk.sectionTitle;
+      document.querySelector('.skills-grid').innerHTML = sk.categories.map(cat => `
+        <div class="skill-category">
+          <div class="skill-category-header">
+            <div class="skill-icon" style="background: ${cat.iconBg};">${cat.icon}</div>
+            <div class="skill-category-title">${escText(cat.title)}</div>
+          </div>
+          ${cat.skills.map(s => `
+            <div class="skill-bar-wrapper">
+              <div class="skill-bar-header">
+                <span class="skill-bar-name">${escText(s.name)}</span>
+                <span class="skill-bar-pct">${s.pct}%</span>
+              </div>
+              <div class="skill-bar"><div class="skill-bar-fill ${cat.fillClass}" data-width="${s.pct}"></div></div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+    }
+
+    // Experience
+    if (data.experience) {
+      const ex = data.experience;
+      document.querySelector('#experience .section-label').textContent = ex.sectionLabel;
+      document.querySelector('#experience .section-title').textContent = ex.sectionTitle;
+      document.querySelector('.timeline').innerHTML = ex.items.map(item => `
+        <div class="timeline-item">
+          <div class="timeline-date">${escText(item.date)}</div>
+          <div class="timeline-title">${escText(item.title)}</div>
+          <div class="timeline-org">${escText(item.org)}</div>
+          <div class="timeline-desc">${escText(item.desc)}</div>
+        </div>
+      `).join('');
+    }
+
+    // Projects
+    if (data.projects) {
+      const pr = data.projects;
+      document.querySelector('#projects .section-label').textContent = pr.sectionLabel;
+      document.querySelector('#projects .section-title').textContent = pr.sectionTitle;
+      document.querySelector('.projects-grid').innerHTML = pr.items.map(p => `
+        <div class="project-card" onclick="toggleProject(this)">
+          <div class="project-banner"><div class="project-banner-bg ${p.bannerClass}">${p.emoji}</div></div>
+          <div class="project-body">
+            <div class="project-tags">
+              ${p.tags.map(t => `<span class="project-tag ${t.color}">${escText(t.text)}</span>`).join('')}
+            </div>
+            <h3 class="project-title">${escText(p.title)}</h3>
+            <p class="project-desc">${escText(p.desc)}</p>
+            <div class="project-expand-content">
+              <ul>${p.details.map(d => `<li>${escText(d)}</li>`).join('')}</ul>
+            </div>
+            <div class="project-footer">
+              <button class="project-expand-btn">+ Expand details</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Education
+    if (data.education) {
+      const ed = data.education;
+      document.querySelector('#education .section-label').textContent = ed.sectionLabel;
+      document.querySelector('#education .section-title').textContent = ed.sectionTitle;
+      const eduCard = document.querySelector('.education-card');
+      eduCard.querySelector('.education-logo').textContent = ed.logoText;
+      eduCard.querySelector('h3').textContent = ed.degree;
+      eduCard.querySelector('.school').textContent = ed.school;
+      eduCard.querySelector('.details').innerHTML = '<strong>Expected:</strong> ' + escText(ed.expected) + '<br><strong>Activities:</strong> ' + escText(ed.activities);
+      const cwList = eduCard.querySelector('.coursework-list');
+      cwList.innerHTML = ed.coursework.map(c => `<span class="course-item">${escText(c)}</span>`).join('');
+    }
+
+    // Additional
+    if (data.additional) {
+      document.querySelector('.additional-grid').innerHTML = data.additional.map(a => `
+        <div class="additional-card">
+          <div class="additional-icon">${a.icon}</div>
+          <div class="additional-name">${escText(a.name)}</div>
+          <div class="additional-detail">${escText(a.detail)}</div>
+        </div>
+      `).join('');
+    }
+
+    // Contact
+    if (data.contact) {
+      const ct = data.contact;
+      document.querySelector('#contact .section-label').textContent = ct.sectionLabel;
+      document.querySelector('#contact .section-title').textContent = ct.sectionTitle;
+      document.querySelector('#contact .section-subtitle').textContent = ct.sectionSubtitle;
+      document.querySelector('.contact-grid').innerHTML = ct.items.map(c => `
+        <a href="${escAttr(c.href)}" ${c.href.startsWith('http') ? 'target="_blank"' : ''} class="contact-card">
+          <div class="contact-icon">${c.icon}</div>
+          <div class="contact-label">${escText(c.label)}</div>
+          <div class="contact-value">${escText(c.value)}</div>
+        </a>
+      `).join('');
+    }
+
+    // Re-observe new elements for scroll animations
+    document.querySelectorAll('.fade-in, .timeline-item').forEach(el => observer.observe(el));
+
+  } catch (e) {
+    // Silent fail — use hardcoded content as fallback
+    console.log('Using hardcoded content (fetch failed):', e.message);
+  }
+}
+
+function escText(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function escAttr(s) { return s.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
 // ========== PROJECT EXPAND ==========
 function toggleProject(card) {
   const wasExpanded = card.classList.contains('expanded');
@@ -1633,6 +1792,8 @@ function formatMarkdown(text) {
     }),
   }).catch(() => {}); // Silent fail — analytics should never break the site
 })();
+
+loadSiteContent();
 </script>
 </body>
 </html>

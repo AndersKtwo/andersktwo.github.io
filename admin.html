@@ -361,9 +361,316 @@
     table { font-size: 0.78rem; }
     th, td { padding: 0.5rem 0.75rem; }
   }
+
+  /* PREVIEW OVERLAY */
+  .preview-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--bg);
+    display: none;
+    flex-direction: column;
+  }
+  .preview-overlay.open { display: flex; }
+  .preview-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 50px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .preview-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .preview-toolbar-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .preview-device-btns {
+    display: flex;
+    gap: 0.25rem;
+  }
+  .preview-device-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text3);
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .preview-device-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .preview-device-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+  .preview-close-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 0.35rem 1rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .preview-close-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+  .preview-frame-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: #1a1a24;
+    overflow: hidden;
+  }
+  .preview-frame-container {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    transition: width 0.4s ease, height 0.4s ease;
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  .preview-frame-container.tablet { width: 768px; height: 100%; }
+  .preview-frame-container.mobile { width: 375px; height: 100%; border-radius: 24px; }
+  .preview-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  .preview-url-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .preview-url {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text3);
+    background: var(--bg);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .preview-open-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text3);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .preview-open-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* PROFILE EDITOR */
+  .profile-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .profile-section h3 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .profile-section .section-desc {
+    color: var(--text2);
+    font-size: 0.8rem;
+    margin-bottom: 1.25rem;
+  }
+  .field-group {
+    margin-bottom: 1rem;
+  }
+  .field-label {
+    font-size: 0.75rem;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.35rem;
+    display: block;
+  }
+  .field-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .field-input:focus { border-color: var(--accent); }
+  .field-input::placeholder { color: var(--text3); }
+  textarea.field-input {
+    min-height: 80px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .field-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 80px;
+    gap: 0.75rem;
+    align-items: end;
+  }
+  .repeater-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    position: relative;
+  }
+  .repeater-item .remove-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .repeater-item .remove-btn:hover { color: var(--accent3); }
+  .add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 1rem;
+    background: var(--accent-dim);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 6px;
+    color: var(--accent);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .add-btn:hover { background: rgba(0,212,255,0.25); }
+  .save-bar {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+    margin: 0 -2rem;
+  }
+  .save-status {
+    font-size: 0.82rem;
+    color: var(--text3);
+  }
+  .save-status.saved { color: #00cc88; }
+  .save-status.error { color: var(--accent3); }
+  .save-status.saving { color: var(--accent); }
+  .save-btn {
+    padding: 0.6rem 2rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .save-btn:hover { transform: translateY(-1px); }
+  .save-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* SKILL BAR PREVIEW */
+  .skill-pct-input {
+    width: 70px;
+    text-align: center;
+  }
+
+  /* COMING SOON OVERLAY */
+  .coming-soon-wrapper {
+    position: relative;
+    min-height: 400px;
+  }
+  .coming-soon-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    z-index: 10;
+  }
+  .coming-soon-badge {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    letter-spacing: 1px;
+  }
+  .coming-soon-text {
+    color: var(--text2);
+    font-size: 0.85rem;
+    text-align: center;
+    max-width: 350px;
+    line-height: 1.5;
+  }
 </style>
 </head>
 <body>
+
+<!-- PREVIEW OVERLAY -->
+<div class="preview-overlay" id="previewOverlay">
+  <div class="preview-toolbar">
+    <div class="preview-toolbar-left">
+      <span class="preview-toolbar-title">Site Preview</span>
+      <div class="preview-device-btns">
+        <button class="preview-device-btn active" onclick="setPreviewDevice('desktop', this)" title="Desktop">&#128421; Desktop</button>
+        <button class="preview-device-btn" onclick="setPreviewDevice('tablet', this)" title="Tablet">&#128195; Tablet</button>
+        <button class="preview-device-btn" onclick="setPreviewDevice('mobile', this)" title="Mobile">&#128241; Mobile</button>
+      </div>
+    </div>
+    <div class="preview-url-bar">
+      <span class="preview-url" id="previewUrl">andersktwo.github.io</span>
+      <button class="preview-open-btn" onclick="window.open(document.getElementById('previewIframe').src, '_blank')" title="Open in new tab">&#8599; Open</button>
+    </div>
+    <button class="preview-close-btn" onclick="closePreview()">&#10005; Close</button>
+  </div>
+  <div class="preview-frame-wrapper">
+    <div class="preview-frame-container" id="previewContainer">
+      <iframe id="previewIframe" class="preview-iframe"></iframe>
+    </div>
+  </div>
+</div>
 
 <!-- LOGIN -->
 <div class="login-page" id="loginPage">
@@ -391,11 +698,13 @@
         <button class="tab-link" onclick="switchTab('leads')">Leads</button>
         <button class="tab-link" onclick="switchTab('traffic')">Traffic</button>
         <button class="tab-link" onclick="switchTab('settings')">Settings</button>
+        <button class="tab-link" onclick="switchTab('profile')">Profile</button>
+        <button class="tab-link" onclick="switchTab('ai-context')">AI Context</button>
       </div>
     </div>
     <div class="top-bar-right">
       <span class="last-updated" id="lastUpdated"></span>
-      <a href="https://andersktwo.github.io" target="_blank" class="refresh-btn" style="text-decoration:none;">&#128065; Preview Site</a>
+      <button class="refresh-btn" onclick="openPreview()">Preview Site</button>
       <button class="refresh-btn" id="refreshBtn" onclick="refreshData()"><span class="refresh-icon">&#8635;</span> Refresh</button>
       <button class="logout-btn" onclick="logout()">Log Out</button>
     </div>
@@ -461,6 +770,236 @@
         <div class="settings-msg" id="settingsMsg"></div>
       </div>
     </div>
+
+    <!-- PROFILE TAB -->
+    <div class="tab-content" id="tab-profile">
+      <div id="profileLoading" class="loading">Loading profile data...</div>
+      <div id="profileEditor" style="display:none;">
+
+        <!-- Header -->
+        <div class="profile-section">
+          <h3>🎯 Header & Hero</h3>
+          <p class="section-desc">The main hero section visitors see first</p>
+          <div class="field-group">
+            <label class="field-label">Status Badge</label>
+            <input class="field-input" id="p-badge" placeholder="e.g. Open to Full-Time & Internships 2027">
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Full Name</label>
+              <input class="field-input" id="p-name" placeholder="Anders Zoega">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Subtitle</label>
+              <input class="field-input" id="p-subtitle" placeholder="Backend Engineer • AI Builder • Founder">
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Tagline</label>
+            <textarea class="field-input" id="p-tagline" placeholder="One-paragraph summary..."></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Resume PDF Filename</label>
+            <input class="field-input" id="p-resumePdf" placeholder="Anders_Zoega_Resume.pdf">
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="profile-section">
+          <h3>📊 Stats Bar</h3>
+          <p class="section-desc">The key metrics shown below the hero</p>
+          <div id="stats-repeater"></div>
+          <button class="add-btn" onclick="addStat()">+ Add Stat</button>
+        </div>
+
+        <!-- About -->
+        <div class="profile-section">
+          <h3>👤 About Me</h3>
+          <p class="section-desc">About section content and quick-glance details</p>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Section Label</label>
+              <input class="field-input" id="p-about-label" placeholder="// About Me">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Section Title</label>
+              <input class="field-input" id="p-about-title" placeholder="Building Products That Ship">
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">About Paragraphs (one per box — HTML allowed for highlights)</label>
+            <div id="about-paragraphs"></div>
+            <button class="add-btn" onclick="addAboutParagraph()" style="margin-top:0.5rem;">+ Add Paragraph</button>
+          </div>
+          <div class="field-group" style="margin-top:1rem;">
+            <label class="field-label">Quick Details</label>
+            <div id="about-details"></div>
+            <button class="add-btn" onclick="addAboutDetail()" style="margin-top:0.5rem;">+ Add Detail</button>
+          </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="profile-section">
+          <h3>💼 Experience</h3>
+          <p class="section-desc">Work experience timeline entries</p>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Section Label</label>
+              <input class="field-input" id="p-exp-label">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Section Title</label>
+              <input class="field-input" id="p-exp-title">
+            </div>
+          </div>
+          <div id="experience-repeater"></div>
+          <button class="add-btn" onclick="addExperience()">+ Add Experience</button>
+        </div>
+
+        <!-- Projects -->
+        <div class="profile-section">
+          <h3>🚀 Projects</h3>
+          <p class="section-desc">Project cards with expandable details</p>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Section Label</label>
+              <input class="field-input" id="p-proj-label">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Section Title</label>
+              <input class="field-input" id="p-proj-title">
+            </div>
+          </div>
+          <div id="projects-repeater"></div>
+          <button class="add-btn" onclick="addProject()">+ Add Project</button>
+        </div>
+
+        <!-- Skills -->
+        <div class="profile-section">
+          <h3>⚡ Skills</h3>
+          <p class="section-desc">Technical skill categories with progress bars</p>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Section Label</label>
+              <input class="field-input" id="p-skills-label">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Section Title</label>
+              <input class="field-input" id="p-skills-title">
+            </div>
+          </div>
+          <div id="skills-repeater"></div>
+          <button class="add-btn" onclick="addSkillCategory()">+ Add Skill Category</button>
+        </div>
+
+        <!-- Education -->
+        <div class="profile-section">
+          <h3>🎓 Education</h3>
+          <p class="section-desc">Education details and coursework</p>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Section Label</label>
+              <input class="field-input" id="p-edu-label">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Section Title</label>
+              <input class="field-input" id="p-edu-title">
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Degree</label>
+            <input class="field-input" id="p-edu-degree">
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">School</label>
+              <input class="field-input" id="p-edu-school">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Logo Text</label>
+              <input class="field-input" id="p-edu-logo" style="max-width:100px;">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Expected Graduation</label>
+              <input class="field-input" id="p-edu-expected">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Activities</label>
+              <input class="field-input" id="p-edu-activities">
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Coursework (comma-separated)</label>
+            <input class="field-input" id="p-edu-coursework" placeholder="Course 1, Course 2, Course 3">
+          </div>
+        </div>
+
+        <!-- Additional -->
+        <div class="profile-section">
+          <h3>✨ Additional</h3>
+          <p class="section-desc">Extra cards below education (languages, hobbies, etc.)</p>
+          <div id="additional-repeater"></div>
+          <button class="add-btn" onclick="addAdditional()">+ Add Item</button>
+        </div>
+
+        <!-- Contact -->
+        <div class="profile-section">
+          <h3>📬 Contact</h3>
+          <p class="section-desc">Contact cards at the bottom</p>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Section Label</label>
+              <input class="field-input" id="p-contact-label">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Section Title</label>
+              <input class="field-input" id="p-contact-title">
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Section Subtitle</label>
+            <input class="field-input" id="p-contact-subtitle">
+          </div>
+          <div id="contact-repeater"></div>
+          <button class="add-btn" onclick="addContact()">+ Add Contact</button>
+        </div>
+
+        <!-- Save Bar -->
+        <div class="save-bar">
+          <span class="save-status" id="saveStatus">All changes are local until you save</span>
+          <button class="save-btn" id="saveBtn" onclick="saveAllProfile()">💾 Save & Publish</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI CONTEXT TAB -->
+    <div class="tab-content" id="tab-ai-context">
+      <div class="coming-soon-wrapper">
+        <div class="coming-soon-overlay">
+          <div class="coming-soon-badge">🚧 Coming Soon</div>
+          <p class="coming-soon-text">The AI Context Builder will let you customize what the chatbot knows about you — without touching any code. Stay tuned!</p>
+        </div>
+        <div style="opacity: 0.15; pointer-events: none;">
+          <div class="profile-section">
+            <h3>🤖 AI System Prompt</h3>
+            <p class="section-desc">Customize what your AI chatbot knows about you</p>
+            <div class="field-group">
+              <label class="field-label">Custom Instructions</label>
+              <textarea class="field-input" style="min-height:160px;" disabled placeholder="You are AndersBot, an AI assistant..."></textarea>
+            </div>
+          </div>
+          <div class="profile-section">
+            <h3>💬 Suggested Questions</h3>
+            <p class="section-desc">Pre-fill chat suggestion chips</p>
+            <div class="field-group">
+              <input class="field-input" disabled placeholder="Why should we hire Anders?">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -470,6 +1009,43 @@ const SUPABASE_URL = 'https://kguucauoxscxreaewiwv.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtndXVjYXVveHNjeHJlYWV3aXd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwNDAxNTQsImV4cCI6MjA2NzYxNjE1NH0.rEOwNGLL4sTlEM8qh1f9MxZjC1RUGvPwYZzY73yNCoY';
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Preview mode
+const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+const previewSiteUrl = isLocal ? location.origin + '/index.html' : 'https://andersktwo.github.io';
+
+function openPreview() {
+  const overlay = document.getElementById('previewOverlay');
+  const iframe = document.getElementById('previewIframe');
+  const urlBar = document.getElementById('previewUrl');
+  iframe.src = previewSiteUrl;
+  urlBar.textContent = isLocal ? 'localhost' + location.port + '/index.html' : 'andersktwo.github.io';
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePreview() {
+  const overlay = document.getElementById('previewOverlay');
+  const iframe = document.getElementById('previewIframe');
+  overlay.classList.remove('open');
+  iframe.src = '';
+  document.body.style.overflow = '';
+}
+
+function setPreviewDevice(device, btn) {
+  const container = document.getElementById('previewContainer');
+  container.classList.remove('tablet', 'mobile');
+  if (device !== 'desktop') container.classList.add(device);
+  document.querySelectorAll('.preview-device-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Close preview on Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('previewOverlay').classList.contains('open')) {
+    closePreview();
+  }
+});
 
 // Check existing session on load
 (async () => {
@@ -659,6 +1235,11 @@ function switchTab(name) {
   document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   event.target.classList.add('active');
+
+  // Load profile data when switching to profile tab
+  if (name === 'profile' && !profileData.header) {
+    loadProfile();
+  }
 }
 
 // CHANGE PASSWORD
@@ -707,6 +1288,506 @@ function togglePassword(inputId, btn) {
     input.type = 'password';
     btn.style.color = '';
   }
+}
+
+// ========== PROFILE EDITOR ==========
+let profileData = {};
+
+async function loadProfile() {
+  const loading = document.getElementById('profileLoading');
+  const editor = document.getElementById('profileEditor');
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/site-content`);
+    if (!res.ok) throw new Error('Failed to load');
+    profileData = await res.json();
+    populateProfileForm();
+    loading.style.display = 'none';
+    editor.style.display = 'block';
+  } catch (err) {
+    loading.textContent = 'Failed to load profile data. Try refreshing.';
+  }
+}
+
+function populateProfileForm() {
+  // Header
+  const h = profileData.header || {};
+  document.getElementById('p-badge').value = h.badge || '';
+  document.getElementById('p-name').value = h.name || '';
+  document.getElementById('p-subtitle').value = h.subtitle || '';
+  document.getElementById('p-tagline').value = h.tagline || '';
+  document.getElementById('p-resumePdf').value = h.resumePdf || '';
+
+  // Stats
+  const stats = profileData.stats || [];
+  document.getElementById('stats-repeater').innerHTML = '';
+  stats.forEach(s => addStat(s));
+
+  // About
+  const ab = profileData.about || {};
+  document.getElementById('p-about-label').value = ab.sectionLabel || '';
+  document.getElementById('p-about-title').value = ab.sectionTitle || '';
+  document.getElementById('about-paragraphs').innerHTML = '';
+  (ab.paragraphs || []).forEach(p => addAboutParagraph(p));
+  document.getElementById('about-details').innerHTML = '';
+  (ab.details || []).forEach(d => addAboutDetail(d));
+
+  // Experience
+  const ex = profileData.experience || {};
+  document.getElementById('p-exp-label').value = ex.sectionLabel || '';
+  document.getElementById('p-exp-title').value = ex.sectionTitle || '';
+  document.getElementById('experience-repeater').innerHTML = '';
+  (ex.items || []).forEach(item => addExperience(item));
+
+  // Projects
+  const pr = profileData.projects || {};
+  document.getElementById('p-proj-label').value = pr.sectionLabel || '';
+  document.getElementById('p-proj-title').value = pr.sectionTitle || '';
+  document.getElementById('projects-repeater').innerHTML = '';
+  (pr.items || []).forEach(item => addProject(item));
+
+  // Skills
+  const sk = profileData.skills || {};
+  document.getElementById('p-skills-label').value = sk.sectionLabel || '';
+  document.getElementById('p-skills-title').value = sk.sectionTitle || '';
+  document.getElementById('skills-repeater').innerHTML = '';
+  (sk.categories || []).forEach(cat => addSkillCategory(cat));
+
+  // Education
+  const ed = profileData.education || {};
+  document.getElementById('p-edu-label').value = ed.sectionLabel || '';
+  document.getElementById('p-edu-title').value = ed.sectionTitle || '';
+  document.getElementById('p-edu-degree').value = ed.degree || '';
+  document.getElementById('p-edu-school').value = ed.school || '';
+  document.getElementById('p-edu-logo').value = ed.logoText || '';
+  document.getElementById('p-edu-expected').value = ed.expected || '';
+  document.getElementById('p-edu-activities').value = ed.activities || '';
+  document.getElementById('p-edu-coursework').value = (ed.coursework || []).join(', ');
+
+  // Additional
+  document.getElementById('additional-repeater').innerHTML = '';
+  (profileData.additional || []).forEach(a => addAdditional(a));
+
+  // Contact
+  const ct = profileData.contact || {};
+  document.getElementById('p-contact-label').value = ct.sectionLabel || '';
+  document.getElementById('p-contact-title').value = ct.sectionTitle || '';
+  document.getElementById('p-contact-subtitle').value = ct.sectionSubtitle || '';
+  document.getElementById('contact-repeater').innerHTML = '';
+  (ct.items || []).forEach(c => addContact(c));
+}
+
+// REPEATER HELPERS
+function addStat(data) {
+  const d = data || { number: '', suffix: '', label: '' };
+  const container = document.getElementById('stats-repeater');
+  const div = document.createElement('div');
+  div.className = 'repeater-item';
+  div.innerHTML = `
+    <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">×</button>
+    <div class="field-row-3">
+      <div class="field-group">
+        <label class="field-label">Number</label>
+        <input class="field-input stat-number-input" value="${escHtml(String(d.number))}">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Label</label>
+        <input class="field-input stat-label-input" value="${escHtml(d.label)}">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Suffix</label>
+        <input class="field-input stat-suffix-input" value="${escHtml(d.suffix)}" placeholder="+" style="text-align:center;">
+      </div>
+    </div>
+  `;
+  container.appendChild(div);
+}
+
+function addAboutParagraph(text) {
+  const container = document.getElementById('about-paragraphs');
+  const div = document.createElement('div');
+  div.className = 'repeater-item';
+  div.innerHTML = `
+    <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">×</button>
+    <textarea class="field-input about-para-input" style="min-height:60px;">${text || ''}</textarea>
+  `;
+  container.appendChild(div);
+}
+
+function addAboutDetail(data) {
+  const d = data || { label: '', value: '' };
+  const container = document.getElementById('about-details');
+  const div = document.createElement('div');
+  div.className = 'repeater-item';
+  div.innerHTML = `
+    <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">×</button>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Label</label>
+        <input class="field-input detail-label-input" value="${escHtml(d.label)}">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Value</label>
+        <input class="field-input detail-value-input" value="${escHtml(d.value)}">
+      </div>
+    </div>
+  `;
+  container.appendChild(div);
+}
+
+function addExperience(data) {
+  const d = data || { date: '', title: '', org: '', desc: '' };
+  const container = document.getElementById('experience-repeater');
+  const div = document.createElement('div');
+  div.className = 'repeater-item';
+  div.innerHTML = `
+    <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">×</button>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Date Range</label>
+        <input class="field-input exp-date-input" value="${escHtml(d.date)}" placeholder="Aug 2024 — Present">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Job Title</label>
+        <input class="field-input exp-title-input" value="${escHtml(d.title)}">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Organization</label>
+      <input class="field-input exp-org-input" value="${escHtml(d.org)}" placeholder="Company · Location">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Description</label>
+      <textarea class="field-input exp-desc-input">${escHtml(d.desc)}</textarea>
+    </div>
+  `;
+  container.appendChild(div);
+}
+
+function addProject(data) {
+  const d = data || { emoji: '🔧', bannerClass: 'banner-1', tags: [], title: '', desc: '', details: [] };
+  const container = document.getElementById('projects-repeater');
+  const div = document.createElement('div');
+  div.className = 'repeater-item';
+  div.innerHTML = `
+    <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">×</button>
+    <div class="field-row-3" style="grid-template-columns: 60px 1fr 120px;">
+      <div class="field-group">
+        <label class="field-label">Emoji</label>
+        <input class="field-input proj-emoji-input" value="${d.emoji}" style="text-align:center; font-size:1.2rem;">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Project Title</label>
+        <input class="field-input proj-title-input" value="${escHtml(d.title)}">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Banner</label>
+        <select class="field-input proj-banner-input" style="padding:0.5rem;">
+          <option value="banner-1" ${d.bannerClass==='banner-1'?'selected':''}>Blue</option>
+          <option value="banner-2" ${d.bannerClass==='banner-2'?'selected':''}>Purple</option>
+          <option value="banner-3" ${d.bannerClass==='banner-3'?'selected':''}>Pink</option>
+          <option value="banner-4" ${d.bannerClass==='banner-4'?'selected':''}>Green</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Tags (comma-separated, prefix with p: or k: for purple/pink)</label>
+      <input class="field-input proj-tags-input" value="${escHtml(d.tags.map(t => (t.color ? t.color[0]+':' : '') + t.text).join(', '))}" placeholder="Node.js, p:SOAP API, k:Supabase">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Short Description</label>
+      <textarea class="field-input proj-desc-input" style="min-height:60px;">${escHtml(d.desc)}</textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Expand Details (one per line)</label>
+      <textarea class="field-input proj-details-input" style="min-height:80px;">${(d.details||[]).map(x => escHtml(x)).join('\n')}</textarea>
+    </div>
+  `;
+  container.appendChild(div);
+}
+
+function addSkillCategory(data) {
+  const d = data || { title: '', icon: '⚡', iconBg: 'var(--accent-dim)', fillClass: 'fill-accent', skills: [] };
+  const container = document.getElementById('skills-repeater');
+  const div = document.createElement('div');
+  div.className = 'repeater-item';
+  const skillsHtml = (d.skills || []).map(s => `
+    <div class="field-row-3" style="margin-bottom:0.4rem;">
+      <div><input class="field-input skill-name" value="${escHtml(s.name)}" placeholder="Skill name"></div>
+      <div></div>
+      <div><input class="field-input skill-pct skill-pct-input" type="number" min="0" max="100" value="${s.pct}"></div>
+    </div>
+  `).join('');
+  div.innerHTML = `
+    <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">×</button>
+    <div class="field-row-3" style="grid-template-columns: 60px 1fr 120px;">
+      <div class="field-group">
+        <label class="field-label">Icon</label>
+        <input class="field-input cat-icon-input" value="${d.icon}" style="text-align:center; font-size:1.2rem;">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Category Title</label>
+        <input class="field-input cat-title-input" value="${escHtml(d.title)}">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Color</label>
+        <select class="field-input cat-fill-input" style="padding:0.5rem;">
+          <option value="fill-accent" ${d.fillClass==='fill-accent'?'selected':''}>Cyan</option>
+          <option value="fill-accent2" ${d.fillClass==='fill-accent2'?'selected':''}>Purple</option>
+          <option value="fill-accent3" ${d.fillClass==='fill-accent3'?'selected':''}>Pink</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label" style="display:flex;justify-content:space-between;"><span>Skills</span><span style="color:var(--text3);">PCT</span></label>
+      <div class="cat-skills-list">${skillsHtml}</div>
+      <button class="add-btn" onclick="addSkillToCategory(this)" style="margin-top:0.35rem;">+ Add Skill</button>
+    </div>
+  `;
+  container.appendChild(div);
+}
+
+function addSkillToCategory(btn) {
+  const list = btn.previousElementSibling;
+  const row = document.createElement('div');
+  row.className = 'field-row-3';
+  row.style.marginBottom = '0.4rem';
+  row.innerHTML = `
+    <div><input class="field-input skill-name" placeholder="Skill name"></div>
+    <div></div>
+    <div><input class="field-input skill-pct skill-pct-input" type="number" min="0" max="100" value="80"></div>
+  `;
+  list.appendChild(row);
+}
+
+function addAdditional(data) {
+  const d = data || { icon: '✨', name: '', detail: '' };
+  const container = document.getElementById('additional-repeater');
+  const div = document.createElement('div');
+  div.className = 'repeater-item';
+  div.innerHTML = `
+    <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">×</button>
+    <div class="field-row-3" style="grid-template-columns: 60px 1fr 1fr;">
+      <div class="field-group">
+        <label class="field-label">Icon</label>
+        <input class="field-input add-icon-input" value="${d.icon}" style="text-align:center; font-size:1.2rem;">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Name</label>
+        <input class="field-input add-name-input" value="${escHtml(d.name)}">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Detail</label>
+        <input class="field-input add-detail-input" value="${escHtml(d.detail)}">
+      </div>
+    </div>
+  `;
+  container.appendChild(div);
+}
+
+function addContact(data) {
+  const d = data || { icon: '📧', label: '', value: '', href: '' };
+  const container = document.getElementById('contact-repeater');
+  const div = document.createElement('div');
+  div.className = 'repeater-item';
+  div.innerHTML = `
+    <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">×</button>
+    <div class="field-row" style="grid-template-columns: 60px 1fr 1fr 1fr;">
+      <div class="field-group">
+        <label class="field-label">Icon</label>
+        <input class="field-input ct-icon-input" value="${d.icon}" style="text-align:center; font-size:1.2rem;">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Label</label>
+        <input class="field-input ct-label-input" value="${escHtml(d.label)}">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Display Value</label>
+        <input class="field-input ct-value-input" value="${escHtml(d.value)}">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Link (href)</label>
+        <input class="field-input ct-href-input" value="${escHtml(d.href)}">
+      </div>
+    </div>
+  `;
+  container.appendChild(div);
+}
+
+// COLLECT FORM DATA
+function collectProfileData() {
+  const data = {};
+
+  // Header
+  data.header = {
+    badge: document.getElementById('p-badge').value,
+    name: document.getElementById('p-name').value,
+    subtitle: document.getElementById('p-subtitle').value,
+    tagline: document.getElementById('p-tagline').value,
+    resumePdf: document.getElementById('p-resumePdf').value,
+  };
+
+  // Stats
+  data.stats = [...document.querySelectorAll('#stats-repeater .repeater-item')].map(el => ({
+    number: el.querySelector('.stat-number-input').value,
+    suffix: el.querySelector('.stat-suffix-input').value,
+    label: el.querySelector('.stat-label-input').value,
+  }));
+
+  // About
+  data.about = {
+    sectionLabel: document.getElementById('p-about-label').value,
+    sectionTitle: document.getElementById('p-about-title').value,
+    paragraphs: [...document.querySelectorAll('.about-para-input')].map(el => el.value),
+    details: [...document.querySelectorAll('#about-details .repeater-item')].map(el => ({
+      label: el.querySelector('.detail-label-input').value,
+      value: el.querySelector('.detail-value-input').value,
+    })),
+  };
+
+  // Experience
+  data.experience = {
+    sectionLabel: document.getElementById('p-exp-label').value,
+    sectionTitle: document.getElementById('p-exp-title').value,
+    items: [...document.querySelectorAll('#experience-repeater .repeater-item')].map(el => ({
+      date: el.querySelector('.exp-date-input').value,
+      title: el.querySelector('.exp-title-input').value,
+      org: el.querySelector('.exp-org-input').value,
+      desc: el.querySelector('.exp-desc-input').value,
+    })),
+  };
+
+  // Projects
+  data.projects = {
+    sectionLabel: document.getElementById('p-proj-label').value,
+    sectionTitle: document.getElementById('p-proj-title').value,
+    items: [...document.querySelectorAll('#projects-repeater .repeater-item')].map(el => {
+      const tagsRaw = el.querySelector('.proj-tags-input').value;
+      const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean).map(t => {
+        if (t.startsWith('p:')) return { text: t.slice(2), color: 'purple' };
+        if (t.startsWith('k:')) return { text: t.slice(2), color: 'pink' };
+        return { text: t, color: '' };
+      });
+      return {
+        emoji: el.querySelector('.proj-emoji-input').value,
+        bannerClass: el.querySelector('.proj-banner-input').value,
+        tags,
+        title: el.querySelector('.proj-title-input').value,
+        desc: el.querySelector('.proj-desc-input').value,
+        details: el.querySelector('.proj-details-input').value.split('\n').map(l => l.trim()).filter(Boolean),
+      };
+    }),
+  };
+
+  // Skills
+  data.skills = {
+    sectionLabel: document.getElementById('p-skills-label').value,
+    sectionTitle: document.getElementById('p-skills-title').value,
+    categories: [...document.querySelectorAll('#skills-repeater .repeater-item')].map(el => {
+      const fillClass = el.querySelector('.cat-fill-input').value;
+      const iconBgMap = { 'fill-accent': 'var(--accent-dim)', 'fill-accent2': 'var(--accent2-dim)', 'fill-accent3': 'rgba(255,107,157,0.15)' };
+      return {
+        title: el.querySelector('.cat-title-input').value,
+        icon: el.querySelector('.cat-icon-input').value,
+        iconBg: iconBgMap[fillClass] || 'var(--accent-dim)',
+        fillClass,
+        skills: [...el.querySelectorAll('.cat-skills-list .field-row-3')].map(row => ({
+          name: row.querySelector('.skill-name').value,
+          pct: parseInt(row.querySelector('.skill-pct').value) || 0,
+        })),
+      };
+    }),
+  };
+
+  // Education
+  data.education = {
+    sectionLabel: document.getElementById('p-edu-label').value,
+    sectionTitle: document.getElementById('p-edu-title').value,
+    degree: document.getElementById('p-edu-degree').value,
+    school: document.getElementById('p-edu-school').value,
+    logoText: document.getElementById('p-edu-logo').value,
+    expected: document.getElementById('p-edu-expected').value,
+    activities: document.getElementById('p-edu-activities').value,
+    coursework: document.getElementById('p-edu-coursework').value.split(',').map(s => s.trim()).filter(Boolean),
+  };
+
+  // Additional
+  data.additional = [...document.querySelectorAll('#additional-repeater .repeater-item')].map(el => ({
+    icon: el.querySelector('.add-icon-input').value,
+    name: el.querySelector('.add-name-input').value,
+    detail: el.querySelector('.add-detail-input').value,
+  }));
+
+  // Contact
+  data.contact = {
+    sectionLabel: document.getElementById('p-contact-label').value,
+    sectionTitle: document.getElementById('p-contact-title').value,
+    sectionSubtitle: document.getElementById('p-contact-subtitle').value,
+    items: [...document.querySelectorAll('#contact-repeater .repeater-item')].map(el => ({
+      icon: el.querySelector('.ct-icon-input').value,
+      label: el.querySelector('.ct-label-input').value,
+      value: el.querySelector('.ct-value-input').value,
+      href: el.querySelector('.ct-href-input').value,
+    })),
+  };
+
+  return data;
+}
+
+// SAVE
+async function saveAllProfile() {
+  const statusEl = document.getElementById('saveStatus');
+  const saveBtn = document.getElementById('saveBtn');
+  statusEl.textContent = 'Saving...';
+  statusEl.className = 'save-status saving';
+  saveBtn.disabled = true;
+
+  const data = collectProfileData();
+
+  // Get fresh token
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    statusEl.textContent = 'Session expired. Please log in again.';
+    statusEl.className = 'save-status error';
+    saveBtn.disabled = false;
+    return;
+  }
+
+  const token = session.access_token;
+  let failed = false;
+
+  // Save each section
+  for (const [key, value] of Object.entries(data)) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/site-content`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ key, value }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Save failed');
+      }
+    } catch (err) {
+      failed = true;
+      statusEl.textContent = `Error saving "${key}": ${err.message}`;
+      statusEl.className = 'save-status error';
+      break;
+    }
+  }
+
+  if (!failed) {
+    statusEl.textContent = '✓ All changes saved & published!';
+    statusEl.className = 'save-status saved';
+    setTimeout(() => {
+      statusEl.textContent = 'All changes are local until you save';
+      statusEl.className = 'save-status';
+    }, 4000);
+  }
+
+  saveBtn.disabled = false;
 }
 </script>
 </body>
