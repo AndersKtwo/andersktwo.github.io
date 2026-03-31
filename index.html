@@ -1613,6 +1613,26 @@ function formatMarkdown(text) {
     .replace(/\n(\d+)\. /g, '<br>$1. ')
     .replace(/\n/g, '<br>');
 }
+
+// ========== PAGE ANALYTICS ==========
+(function() {
+  // Generate or retrieve a persistent visitor ID
+  let visitorId = localStorage.getItem('_vid');
+  if (!visitorId) {
+    visitorId = crypto.randomUUID();
+    localStorage.setItem('_vid', visitorId);
+  }
+
+  fetch('https://kguucauoxscxreaewiwv.supabase.co/functions/v1/track', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      visitor_id: visitorId,
+      path: window.location.pathname,
+      referrer: document.referrer || null,
+    }),
+  }).catch(() => {}); // Silent fail — analytics should never break the site
+})();
 </script>
 </body>
 </html>

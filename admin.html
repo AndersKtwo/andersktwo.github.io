@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Anders Zoega</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #12121a;
+    --card: #16161f;
+    --border: rgba(255,255,255,0.06);
+    --accent: #00d4ff;
+    --accent-dim: rgba(0,212,255,0.15);
+    --accent-glow: rgba(0,212,255,0.4);
+    --accent2: #7b5cff;
+    --accent3: #ff6b9d;
+    --text: #e8e8f0;
+    --text2: #8888a0;
+    --text3: #555570;
+    --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --mono: 'Cascadia Code', 'Fira Code', monospace;
+    --radius: 12px;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+  /* LOGIN */
+  .login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .login-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+  }
+  .login-box h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+  }
+  .login-box .sub {
+    color: var(--text2);
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+  .login-box input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.9rem;
+    outline: none;
+    margin-bottom: 0.75rem;
+    transition: border-color 0.2s;
+  }
+  .login-box input:focus { border-color: var(--accent); }
+  .login-box input::placeholder { color: var(--text3); }
+  .login-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 0.25rem;
+  }
+  .login-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px var(--accent-glow); }
+  .login-error {
+    color: var(--accent3);
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    min-height: 1.2rem;
+  }
+  .temp-notice {
+    background: rgba(255,107,157,0.1);
+    border: 1px solid rgba(255,107,157,0.2);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.78rem;
+    color: var(--accent3);
+    margin-top: 1rem;
+  }
+
+  /* DASHBOARD */
+  .dashboard { display: none; }
+  .dashboard.active { display: block; }
+  .login-page.hidden { display: none; }
+
+  .top-bar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .top-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  .top-bar-logo {
+    font-family: var(--mono);
+    color: var(--accent);
+    font-size: 0.9rem;
+  }
+  .top-bar-logo span { color: var(--text3); }
+  .tab-links { display: flex; gap: 0.25rem; }
+  .tab-link {
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: var(--text2);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .tab-link.active { color: var(--accent); background: var(--accent-dim); }
+  .logout-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 0.35rem 1rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .logout-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+
+  .content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* CARDS */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+  }
+  .stat-card .label { font-size: 0.75rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.25rem; }
+  .stat-card .value { font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .stat-card .detail { font-size: 0.78rem; color: var(--text2); margin-top: 0.25rem; }
+
+  /* TABLE */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .card-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  th {
+    text-align: left;
+    padding: 0.7rem 1.25rem;
+    color: var(--text3);
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 0.7rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .email-cell { color: var(--accent); }
+  .company-cell { color: var(--text); font-weight: 500; }
+
+  /* CHART BARS */
+  .bar-chart { padding: 1.25rem; }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.82rem;
+  }
+  .bar-label {
+    width: 100px;
+    text-align: right;
+    color: var(--text2);
+    flex-shrink: 0;
+    font-size: 0.78rem;
+  }
+  .bar-track {
+    flex: 1;
+    height: 20px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    min-width: 2px;
+    transition: width 0.6s ease;
+  }
+  .bar-count {
+    width: 40px;
+    color: var(--text3);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+  }
+
+  /* SETTINGS */
+  .settings-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    max-width: 460px;
+  }
+  .settings-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+  .settings-card .desc {
+    color: var(--text2);
+    font-size: 0.82rem;
+    margin-bottom: 1.25rem;
+  }
+  .settings-card input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.65rem 1rem;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.88rem;
+    outline: none;
+    margin-bottom: 0.75rem;
+    transition: border-color 0.2s;
+  }
+  .settings-card input:focus { border-color: var(--accent); }
+  .settings-card input::placeholder { color: var(--text3); }
+  .settings-btn {
+    padding: 0.6rem 1.5rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .settings-btn:hover { transform: translateY(-1px); }
+  .settings-msg {
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+    min-height: 1.2rem;
+  }
+  .settings-msg.success { color: #00cc88; }
+  .settings-msg.error { color: var(--accent3); }
+
+  .loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text3);
+  }
+
+  @media (max-width: 768px) {
+    .content { padding: 1rem; }
+    .stat-row { grid-template-columns: 1fr 1fr; }
+    .top-bar { padding: 0 1rem; }
+    .top-bar-left { gap: 1rem; }
+    .tab-links { gap: 0; }
+    .tab-link { padding: 0.35rem 0.6rem; font-size: 0.75rem; }
+    table { font-size: 0.78rem; }
+    th, td { padding: 0.5rem 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-page" id="loginPage">
+  <div class="login-box">
+    <h1>Admin Dashboard</h1>
+    <p class="sub">andersktwo.github.io</p>
+    <input type="email" id="loginEmail" placeholder="Email" value="andzoe@outlook.com">
+    <input type="password" id="loginPassword" placeholder="Password" onkeypress="if(event.key==='Enter') login()">
+    <button class="login-btn" onclick="login()">Sign In</button>
+    <div class="login-error" id="loginError"></div>
+    <div class="temp-notice">Temporary password: <strong>TempPass2026</strong><br>Change it in Settings after logging in.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <div class="top-bar-logo">admin<span>.panel</span></div>
+      <div class="tab-links">
+        <button class="tab-link active" onclick="switchTab('overview')">Overview</button>
+        <button class="tab-link" onclick="switchTab('leads')">Leads</button>
+        <button class="tab-link" onclick="switchTab('traffic')">Traffic</button>
+        <button class="tab-link" onclick="switchTab('settings')">Settings</button>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Log Out</button>
+  </div>
+
+  <div class="content">
+    <div class="loading" id="loadingMsg">Loading analytics...</div>
+
+    <!-- OVERVIEW TAB -->
+    <div class="tab-content active" id="tab-overview">
+      <div class="stat-row" id="overviewStats"></div>
+    </div>
+
+    <!-- LEADS TAB -->
+    <div class="tab-content" id="tab-leads">
+      <div class="card">
+        <div class="card-header">Chat Sessions</div>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Company</th>
+                <th>Messages</th>
+                <th>Tokens</th>
+                <th>Last Active</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRAFFIC TAB -->
+    <div class="tab-content" id="tab-traffic">
+      <div class="stat-row" id="trafficStats"></div>
+      <div class="card">
+        <div class="card-header">Daily Views (Last 30 Days)</div>
+        <div class="bar-chart" id="dailyChart"></div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="card">
+          <div class="card-header">Top Referrers</div>
+          <div class="bar-chart" id="referrerChart"></div>
+        </div>
+        <div class="card">
+          <div class="card-header">Countries</div>
+          <div class="bar-chart" id="countryChart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="tab-content" id="tab-settings">
+      <div class="settings-card">
+        <h3>Change Password</h3>
+        <p class="desc">Set a new password for your admin account.</p>
+        <input type="password" id="newPassword" placeholder="New password (min 6 characters)">
+        <input type="password" id="confirmPassword" placeholder="Confirm new password" onkeypress="if(event.key==='Enter') changePassword()">
+        <button class="settings-btn" onclick="changePassword()">Update Password</button>
+        <div class="settings-msg" id="settingsMsg"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://kguucauoxscxreaewiwv.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtndXVjYXVveHNjeHJlYWV3aXd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwNDAxNTQsImV4cCI6MjA2NzYxNjE1NH0.rEOwNGLL4sTlEM8qh1f9MxZjC1RUGvPwYZzY73yNCoY';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Check existing session on load
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) showDashboard(session);
+})();
+
+async function login() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errorEl = document.getElementById('loginError');
+  errorEl.textContent = '';
+
+  if (!email || !password) {
+    errorEl.textContent = 'Please fill in both fields.';
+    return;
+  }
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    errorEl.textContent = error.message;
+    return;
+  }
+
+  showDashboard(data.session);
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  document.getElementById('loginPage').classList.remove('hidden');
+  document.getElementById('dashboard').classList.remove('active');
+}
+
+async function showDashboard(session) {
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('dashboard').classList.add('active');
+
+  // Remove temp password notice after first login
+  const notice = document.querySelector('.temp-notice');
+  if (notice) notice.remove();
+
+  await loadAnalytics(session.access_token);
+}
+
+async function loadAnalytics(token) {
+  const loadingEl = document.getElementById('loadingMsg');
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/admin-analytics`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!res.ok) throw new Error('Failed to load');
+    const data = await res.json();
+    loadingEl.style.display = 'none';
+    renderOverview(data);
+    renderLeads(data.chatSessions);
+    renderTraffic(data.analytics);
+  } catch (err) {
+    loadingEl.textContent = 'Failed to load analytics. Try refreshing.';
+  }
+}
+
+function renderOverview(data) {
+  const { analytics, costs, chatSessions } = data;
+  const totalMessages = chatSessions.reduce((s, c) => s + c.message_count, 0);
+
+  document.getElementById('overviewStats').innerHTML = `
+    <div class="stat-card">
+      <div class="label">Total Visitors</div>
+      <div class="value">${analytics.uniqueVisitors.toLocaleString()}</div>
+      <div class="detail">${analytics.totalViews.toLocaleString()} page views</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Chat Leads</div>
+      <div class="value">${chatSessions.length}</div>
+      <div class="detail">${totalMessages} total messages</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">LLM Cost</div>
+      <div class="value">$${costs.totalCost.toFixed(4)}</div>
+      <div class="detail">${costs.totalInputTokens.toLocaleString()} in / ${costs.totalOutputTokens.toLocaleString()} out tokens</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Cost per Lead</div>
+      <div class="value">$${chatSessions.length > 0 ? (costs.totalCost / chatSessions.length).toFixed(4) : '0.00'}</div>
+      <div class="detail">Average across all chat sessions</div>
+    </div>
+  `;
+}
+
+function renderLeads(sessions) {
+  const tbody = document.getElementById('leadsTable');
+  if (!sessions.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--text3); padding: 2rem;">No chat sessions yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = sessions.map(s => {
+    const tokens = (s.total_input_tokens || 0) + (s.total_output_tokens || 0);
+    const date = new Date(s.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return `<tr>
+      <td class="email-cell">${escHtml(s.email)}</td>
+      <td>${escHtml(s.name || '-')}</td>
+      <td class="company-cell">${escHtml(s.company || '-')}</td>
+      <td>${s.message_count}/20</td>
+      <td>${tokens.toLocaleString()}</td>
+      <td>${date}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderTraffic(analytics) {
+  document.getElementById('trafficStats').innerHTML = `
+    <div class="stat-card">
+      <div class="label">Unique Visitors</div>
+      <div class="value">${analytics.uniqueVisitors.toLocaleString()}</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Page Views</div>
+      <div class="value">${analytics.totalViews.toLocaleString()}</div>
+    </div>
+  `;
+
+  // Daily chart
+  const daily = analytics.dailyStats.slice().reverse();
+  const maxViews = Math.max(...daily.map(d => d.views), 1);
+  document.getElementById('dailyChart').innerHTML = daily.length
+    ? daily.map(d => `
+      <div class="bar-row">
+        <div class="bar-label">${d.date.substring(5)}</div>
+        <div class="bar-track"><div class="bar-fill" style="width: ${(d.views / maxViews * 100)}%"></div></div>
+        <div class="bar-count">${d.views}</div>
+      </div>
+    `).join('')
+    : '<p style="color: var(--text3); padding: 1rem; text-align: center;">No data yet</p>';
+
+  // Referrers
+  const maxRef = Math.max(...analytics.topReferrers.map(r => r.count), 1);
+  document.getElementById('referrerChart').innerHTML = analytics.topReferrers.length
+    ? analytics.topReferrers.map(r => `
+      <div class="bar-row">
+        <div class="bar-label">${escHtml(r.source)}</div>
+        <div class="bar-track"><div class="bar-fill" style="width: ${(r.count / maxRef * 100)}%; background: linear-gradient(90deg, var(--accent2), var(--accent3))"></div></div>
+        <div class="bar-count">${r.count}</div>
+      </div>
+    `).join('')
+    : '<p style="color: var(--text3); padding: 1rem; text-align: center;">No referrer data yet</p>';
+
+  // Countries
+  const maxCountry = Math.max(...analytics.topCountries.map(c => c.count), 1);
+  document.getElementById('countryChart').innerHTML = analytics.topCountries.length
+    ? analytics.topCountries.map(c => `
+      <div class="bar-row">
+        <div class="bar-label">${escHtml(c.country)}</div>
+        <div class="bar-track"><div class="bar-fill" style="width: ${(c.count / maxCountry * 100)}%; background: linear-gradient(90deg, var(--accent3), var(--accent))"></div></div>
+        <div class="bar-count">${c.count}</div>
+      </div>
+    `).join('')
+    : '<p style="color: var(--text3); padding: 1rem; text-align: center;">No country data yet</p>';
+}
+
+// TABS
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// CHANGE PASSWORD
+async function changePassword() {
+  const newPw = document.getElementById('newPassword').value;
+  const confirmPw = document.getElementById('confirmPassword').value;
+  const msgEl = document.getElementById('settingsMsg');
+  msgEl.textContent = '';
+  msgEl.className = 'settings-msg';
+
+  if (!newPw || newPw.length < 6) {
+    msgEl.textContent = 'Password must be at least 6 characters.';
+    msgEl.classList.add('error');
+    return;
+  }
+  if (newPw !== confirmPw) {
+    msgEl.textContent = 'Passwords do not match.';
+    msgEl.classList.add('error');
+    return;
+  }
+
+  const { error } = await sb.auth.updateUser({ password: newPw });
+  if (error) {
+    msgEl.textContent = error.message;
+    msgEl.classList.add('error');
+  } else {
+    msgEl.textContent = 'Password updated successfully!';
+    msgEl.classList.add('success');
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+  }
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>
