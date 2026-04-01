@@ -4,7 +4,7 @@
     {
       "name": "static-site",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8000"],
+      "runtimeArgs": ["-m", "http.server", "8000", "--directory", "/Users/anderszoega/andersktwo.github.io"],
       "port": 8000
     }
   ]

@@ -1762,6 +1762,14 @@ function addProject(data) {
       </div>
     </div>
     <div class="field-group">
+      <label class="field-label">Banner Media (image or video — replaces emoji)</label>
+      <div style="display:flex; gap:0.5rem; align-items:center;">
+        <input type="file" class="proj-media-file" accept="image/*,video/mp4,video/webm" onchange="uploadProjectMedia(this)" style="font-size:0.78rem; color:var(--text2);">
+        <input class="field-input proj-media-url" placeholder="Or paste URL" value="${escHtml(d.mediaUrl || '')}" style="flex:1;">
+        ${d.mediaUrl ? '<button class="device-remove-btn" onclick="this.parentElement.querySelector(\'.proj-media-url\').value=\\\'\\\'; this.remove();" style="white-space:nowrap;">Clear</button>' : ''}
+      </div>
+    </div>
+    <div class="field-group">
       <label class="field-label">Tags (comma-separated, prefix with p: or k: for purple/pink)</label>
       <input class="field-input proj-tags-input" value="${escHtml(d.tags.map(t => (t.color ? t.color[0]+':' : '') + t.text).join(', '))}" placeholder="Node.js, p:SOAP API, k:Supabase">
     </div>
@@ -1775,6 +1783,43 @@ function addProject(data) {
     </div>
   `;
   container.appendChild(div);
+}
+
+async function uploadProjectMedia(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const urlInput = input.parentElement.querySelector('.proj-media-url');
+  urlInput.value = 'Uploading...';
+
+  const ext = file.name.split('.').pop();
+  const fileName = 'project-' + Date.now() + '.' + ext;
+
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    urlInput.value = '';
+    alert('Session expired. Please log in again.');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/project-media/${fileName}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session.access_token}`,
+        'Content-Type': file.type,
+      },
+      body: file,
+    });
+
+    if (!res.ok) throw new Error('Upload failed');
+
+    const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/project-media/${fileName}`;
+    urlInput.value = publicUrl;
+  } catch (err) {
+    urlInput.value = '';
+    alert('Upload failed: ' + err.message);
+  }
 }
 
 function addSkillCategory(data) {
@@ -1942,6 +1987,7 @@ function collectProfileData() {
       return {
         emoji: el.querySelector('.proj-emoji-input').value,
         bannerClass: el.querySelector('.proj-banner-input').value,
+        mediaUrl: el.querySelector('.proj-media-url').value || '',
         tags,
         title: el.querySelector('.proj-title-input').value,
         desc: el.querySelector('.proj-desc-input').value,
