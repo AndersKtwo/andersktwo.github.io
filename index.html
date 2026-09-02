@@ -248,39 +248,6 @@
     font-size: 0.95rem;
   }
 
-  /* ========== STATS BAR ========== */
-  .stats-bar {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
-    margin-bottom: 3rem;
-  }
-  .stat-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    text-align: center;
-    transition: var(--transition);
-  }
-  .stat-card:hover {
-    border-color: var(--border-accent);
-    transform: translateY(-3px);
-  }
-  .stat-number {
-    font-size: 2rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .stat-label {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    margin-top: 0.25rem;
-  }
-
   /* ========== ABOUT ========== */
   .about-grid {
     display: grid;
@@ -1099,28 +1066,6 @@
   <div class="scroll-indicator">&darr;</div>
 </section>
 
-<!-- Stats -->
-<section>
-  <div class="stats-bar fade-in">
-    <div class="stat-card">
-      <div class="stat-number" data-target="430">0</div>
-      <div class="stat-label">Products Synced in ~40 Seconds</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number" data-target="15000">0</div>
-      <div class="stat-label">Dead Lines of Code Removed</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number" data-target="3">0</div>
-      <div class="stat-label">Stage Agent Pipeline</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number">$2.45M</div>
-      <div class="stat-label">Seed Round Closed by Audited Client</div>
-    </div>
-  </div>
-</section>
-
 <!-- About -->
 <section id="about">
   <div class="section-header fade-in">
@@ -1690,17 +1635,6 @@ async function loadSiteContent() {
       document.querySelector('.hero .tagline').textContent = h.tagline;
       const pdfLink = document.querySelector('a[href*="Resume"]');
       if (pdfLink && h.resumePdf) pdfLink.href = h.resumePdf;
-    }
-
-    // Stats
-    if (data.stats) {
-      const statsBar = document.querySelector('.stats-bar');
-      statsBar.innerHTML = data.stats.map(s => `
-        <div class="stat-card">
-          <div class="stat-number" data-target="${escAttr(s.number)}" data-suffix="${escAttr(s.suffix)}" >0</div>
-          <div class="stat-label">${escText(s.label)}</div>
-        </div>
-      `).join('');
     }
 
     // About
