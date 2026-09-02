@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anders Zoega | Backend & AI Engineer</title>
-<meta name="description" content="AI-native backend developer. Founder of Ktwo.ai. Building APIs, data pipelines, and cloud infrastructure with Node.js, Python, Supabase, and AWS.">
-<meta property="og:title" content="Anders Zoega — Backend & AI Engineer">
-<meta property="og:description" content="AI-native backend developer who ships production systems fast. Founder of Ktwo.ai, an app dev agency serving international clients.">
+<title>Anders Zoega | Technical Co-Founder & AI Engineer</title>
+<meta name="description" content="Technical co-founder and AI engineer taking AI into operating businesses end to end. Co-founder of Ktwo.ai — an AI operations product for home-services businesses.">
+<meta property="og:title" content="Anders Zoega — Technical Co-Founder & AI Engineer">
+<meta property="og:description" content="Technical co-founder and AI engineer who takes AI into operating businesses end to end — architecture, build, deployment, and the client relationship. Co-founder of Ktwo.ai.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://andersktwo.github.io">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Anders Zoega — Backend & AI Engineer">
-<meta name="twitter:description" content="AI-native backend developer. Founder of Ktwo.ai. APIs, cloud infra, and AI tooling.">
+<meta name="twitter:title" content="Anders Zoega — Technical Co-Founder & AI Engineer">
+<meta name="twitter:description" content="Technical co-founder and AI engineer. Co-founder of Ktwo.ai — AI agents, backend systems, and AI adoption for operating businesses.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80' font-family='Inter,sans-serif' font-weight='600'>AZ</text></svg>">
 <style>
   /* ========== RESET & BASE ========== */
@@ -345,6 +345,17 @@
     font-size: 1rem;
     font-weight: 600;
   }
+  .skill-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .skill-chip {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 50px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+  .skill-chip.purple { background: var(--accent2-dim); color: var(--accent2); }
+  .skill-chip.pink { background: rgba(255, 107, 157, 0.15); color: var(--accent3); }
   .skill-bar-wrapper {
     margin-bottom: 0.75rem;
   }
@@ -468,6 +479,80 @@
     height: 100%;
     object-fit: cover;
   }
+  .project-media-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .project-media-item {
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: var(--transition);
+    aspect-ratio: 16/10;
+    position: relative;
+  }
+  .project-media-item:hover {
+    border-color: var(--accent);
+    transform: scale(1.03);
+  }
+  .project-media-item img,
+  .project-media-item video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .project-media-item .pdf-thumb {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-secondary);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .project-media-item .pdf-thumb svg { opacity: 0.7; }
+  .media-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+    animation: fadeInUp 0.2s ease-out;
+  }
+  .media-lightbox img,
+  .media-lightbox video {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: var(--radius);
+    object-fit: contain;
+  }
+  .media-lightbox-close {
+    position: absolute;
+    top: 1rem; right: 1.5rem;
+    background: none; border: none;
+    color: white; font-size: 2rem;
+    cursor: pointer;
+  }
+  .media-lightbox-nav {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,0.1);
+    border: none; color: white;
+    font-size: 1.5rem; cursor: pointer;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+  }
+  .media-lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+  .media-lightbox-nav.prev { left: 1rem; }
+  .media-lightbox-nav.next { right: 1rem; }
   .project-body { padding: 1.25rem; }
   .project-tags {
     display: flex; flex-wrap: wrap; gap: 0.4rem;
@@ -652,7 +737,7 @@
     color: var(--text-secondary);
   }
   .chatbot-messages {
-    height: 350px;
+    height: 420px;
     overflow-y: auto;
     padding: 1.25rem;
     display: flex;
@@ -745,6 +830,80 @@
     display: flex; align-items: center; justify-content: center;
   }
   .chatbot-send:hover { transform: scale(1.05); box-shadow: 0 4px 15px var(--accent-glow); }
+
+  /* ========== CHAT DOCK & TYPING ========== */
+  .chatbot-header-actions { margin-left: auto; display: flex; gap: 0.4rem; }
+  .chat-action-btn {
+    width: 32px; height: 32px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: var(--transition);
+  }
+  .chat-action-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  #chatArea { flex-direction: column; min-height: 0; }
+
+  .chatbot-section.docked {
+    position: fixed;
+    top: 60px; right: 0; bottom: 0;
+    width: min(420px, 100vw);
+    max-width: none;
+    margin: 0;
+    z-index: 1500;
+    border-radius: 0;
+    border-top: none; border-right: none; border-bottom: none;
+    display: flex; flex-direction: column;
+    animation: slideInRight 0.3s ease-out;
+    box-shadow: -12px 0 40px rgba(0, 0, 0, 0.5);
+  }
+  @keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+  .chatbot-section.docked #chatArea { flex: 1; }
+  .chatbot-section.docked .chatbot-messages { height: auto; flex: 1; }
+  .chatbot-section.docked .email-gate {
+    flex: 1;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  body.chat-docked { padding-right: 420px; }
+  @media (max-width: 900px) {
+    body.chat-docked { padding-right: 0; }
+    .chatbot-section.docked { width: 100vw; }
+  }
+
+  .chat-dock-placeholder {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+    border: 1px dashed var(--border-accent);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+  }
+  .chat-dock-placeholder button {
+    background: none; border: none;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .typing-cursor {
+    display: inline-block;
+    width: 2px; height: 1em;
+    background: var(--accent);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: pulse 1s infinite;
+  }
 
   /* ========== EMAIL GATE ========== */
   .email-gate {
@@ -927,10 +1086,10 @@
 <!-- Hero -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-badge"><span class="pulse"></span> Open to Full-Time &amp; Internships 2027</div>
+    <div class="hero-badge"><span class="pulse"></span> Open to Internships &amp; Part-Time Roles &mdash; Available Now</div>
     <h1>Hi, I'm <span class="gradient-text">Anders Zoega</span></h1>
-    <p class="subtitle">Backend Engineer &bull; AI Builder &bull; Founder</p>
-    <p class="tagline">AI-native backend developer who ships production systems fast. Founder of Ktwo.ai, an app dev agency serving international clients. Building APIs, data pipelines, and cloud infrastructure.</p>
+    <p class="subtitle">Technical Co-Founder &bull; AI Engineer &bull; AI Consultant</p>
+    <p class="tagline">Technical co-founder and AI engineer who takes AI into operating businesses end to end &mdash; architecture, build, deployment, and the client relationship. Co-founder of Ktwo.ai, an AI operations product for home-services businesses.</p>
     <div class="hero-cta">
       <a href="#projects" class="btn btn-primary">View My Work</a>
       <a href="#ask-me" class="btn btn-outline">Ask My AI About Me</a>
@@ -944,20 +1103,20 @@
 <section>
   <div class="stats-bar fade-in">
     <div class="stat-card">
-      <div class="stat-number" data-target="24000" data-suffix="+">0</div>
-      <div class="stat-label">App Downloads Served</div>
+      <div class="stat-number" data-target="430">0</div>
+      <div class="stat-label">Products Synced in ~40 Seconds</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number" data-target="400" data-suffix="+">0</div>
-      <div class="stat-label">Products Synced via API</div>
+      <div class="stat-number" data-target="15000">0</div>
+      <div class="stat-label">Dead Lines of Code Removed</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number" data-target="4">0</div>
-      <div class="stat-label">Production Apps Shipped</div>
+      <div class="stat-number" data-target="3">0</div>
+      <div class="stat-label">Stage Agent Pipeline</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number" data-target="5" data-suffix="+">0</div>
-      <div class="stat-label">API Integrations Built</div>
+      <div class="stat-number">$2.45M</div>
+      <div class="stat-label">Seed Round Closed by Audited Client</div>
     </div>
   </div>
 </section>
@@ -970,9 +1129,9 @@
   </div>
   <div class="about-grid fade-in">
     <div class="about-text">
-      <p>I'm a <span class="highlight">junior at the University of Miami</span>, studying Artificial Intelligence at the <span class="highlight">Herbert Business School</span>. I sit at the intersection of backend engineering and AI &mdash; I don't just write code, I build products that solve real business problems.</p>
-      <p>I founded <span class="highlight">Ktwo.ai</span>, an app development agency serving international clients. I've built everything from <span class="highlight">SOAP API integrations</span> and <span class="highlight">custom CRM platforms</span> to <span class="highlight">AI-powered content moderation systems</span> &mdash; all shipped to production with real users.</p>
-      <p>I leverage AI throughout my entire development workflow &mdash; from architecture planning and pair-programming with LLMs to building AI-powered product features. I believe the best engineers ship fast, iterate faster, and treat AI as a force multiplier.</p>
+      <p>I'm a <span class="highlight">technical co-founder and AI engineer</span> who takes AI into operating businesses end to end &mdash; architecture, build, deployment, and the client relationship &mdash; while studying AI at the <span class="highlight">University of Miami Herbert Business School</span>.</p>
+      <p>At <span class="highlight">Ktwo.ai</span> (two co-founders; I own product and engineering), I rebuilt the platform from a Replit-generated prototype into an engineered codebase: an auth migration with <span class="highlight">mandatory 2FA</span>, structural tenant isolation with tripwire tests, a <span class="highlight">deterministic agent orchestrator</span> with prompt-injection isolation, and the repo's first test suite. I also completed a <span class="highlight">paid engagement</span> auditing a venture-backed startup's codebase and AI implementation ahead of its $2.45M raise.</p>
+      <p>I'm an <span class="highlight">AI-native builder</span> &mdash; Claude Code and Cursor are core to how I work, and I'm drawn to teams putting AI into actual operations rather than demoing it. I'm looking for an <span class="highlight">internship or part-time engineering role</span> at a seed-to-Series A startup, starting now &mdash; remote or Miami in-person during the semester, open to relocating for the summer.</p>
     </div>
     <div class="about-details">
       <div class="detail-item">
@@ -993,19 +1152,23 @@
       </div>
       <div class="detail-item">
         <span class="detail-label">Graduation</span>
-        <span class="detail-value">May 2027</span>
+        <span class="detail-value">December 2027</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">Company</span>
         <span class="detail-value">Ktwo.ai LLC</span>
       </div>
       <div class="detail-item">
-        <span class="detail-label">Focus Areas</span>
-        <span class="detail-value">Backend, APIs, AI</span>
+        <span class="detail-label">Seeking</span>
+        <span class="detail-value">Backend &amp; Full-Stack Roles</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Work Authorization</span>
+        <span class="detail-value">Authorized to work in the U.S.</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">Languages</span>
-        <span class="detail-value">Danish, English</span>
+        <span class="detail-value">Danish (native), English (fluent)</span>
       </div>
     </div>
   </div>
@@ -1016,88 +1179,63 @@
   <div class="section-header fade-in">
     <div class="section-label">// Technical Skills</div>
     <h2 class="section-title">What I Work With</h2>
-    <p class="section-subtitle">Hover to explore</p>
   </div>
   <div class="skills-grid fade-in">
-    <!-- Backend & APIs -->
+    <!-- Languages -->
     <div class="skill-category">
       <div class="skill-category-header">
-        <div class="skill-icon" style="background: var(--accent-dim);">&#9881;</div>
-        <div class="skill-category-title">Backend & APIs</div>
+        <div class="skill-icon" style="background: rgba(255,107,157,0.15);">&#9889;</div>
+        <div class="skill-category-title">Languages</div>
       </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">Node.js / Express</span><span class="skill-bar-pct">92%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent" data-width="92"></div></div>
-      </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">Supabase / PostgreSQL</span><span class="skill-bar-pct">90%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent" data-width="90"></div></div>
-      </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">REST / SOAP APIs</span><span class="skill-bar-pct">88%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent" data-width="88"></div></div>
-      </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">AWS (EC2, S3, Lambda)</span><span class="skill-bar-pct">82%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent" data-width="82"></div></div>
-      </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">Stripe / Payments</span><span class="skill-bar-pct">85%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent" data-width="85"></div></div>
+      <div class="skill-chips">
+        <span class="skill-chip pink">JavaScript</span>
+        <span class="skill-chip pink">TypeScript</span>
+        <span class="skill-chip pink">Python</span>
+        <span class="skill-chip pink">SQL</span>
       </div>
     </div>
-    <!-- Languages & Tools -->
+    <!-- AI -->
     <div class="skill-category">
       <div class="skill-category-header">
-        <div class="skill-icon" style="background: var(--accent2-dim);">&#9889;</div>
-        <div class="skill-category-title">Languages & Platforms</div>
+        <div class="skill-icon" style="background: var(--accent-dim);">&#129302;</div>
+        <div class="skill-category-title">AI Engineering</div>
       </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">JavaScript / TypeScript</span><span class="skill-bar-pct">93%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent2" data-width="93"></div></div>
-      </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">Python</span><span class="skill-bar-pct">85%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent2" data-width="85"></div></div>
-      </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">SQL</span><span class="skill-bar-pct">88%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent2" data-width="88"></div></div>
-      </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">React Native</span><span class="skill-bar-pct">80%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent2" data-width="80"></div></div>
-      </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">Git / CI/CD</span><span class="skill-bar-pct">87%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent2" data-width="87"></div></div>
+      <div class="skill-chips">
+        <span class="skill-chip">Anthropic API / Claude</span>
+        <span class="skill-chip">Agentic Architectures</span>
+        <span class="skill-chip">Prompt-Injection Defense</span>
+        <span class="skill-chip">AI Workflow Automation</span>
+        <span class="skill-chip">AI-Assisted Dev (Cursor, Claude Code)</span>
       </div>
     </div>
-    <!-- AI & Automation -->
+    <!-- Backend & Infrastructure -->
     <div class="skill-category">
       <div class="skill-category-header">
-        <div class="skill-icon" style="background: rgba(255,107,157,0.15);">&#129302;</div>
-        <div class="skill-category-title">AI & Automation</div>
+        <div class="skill-icon" style="background: var(--accent2-dim);">&#9881;</div>
+        <div class="skill-category-title">Backend & Infrastructure</div>
       </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">AI Pair-Programming (Claude, Cursor)</span><span class="skill-bar-pct">95%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent3" data-width="95"></div></div>
+      <div class="skill-chips">
+        <span class="skill-chip purple">Node.js</span>
+        <span class="skill-chip purple">Express</span>
+        <span class="skill-chip purple">Supabase (PostgreSQL)</span>
+        <span class="skill-chip purple">Drizzle ORM</span>
+        <span class="skill-chip purple">REST / SOAP APIs</span>
+        <span class="skill-chip purple">Stripe &amp; Webhooks</span>
+        <span class="skill-chip purple">Docker</span>
+        <span class="skill-chip purple">Railway</span>
+        <span class="skill-chip purple">Vitest</span>
       </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">AI Workflow Automation</span><span class="skill-bar-pct">88%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent3" data-width="88"></div></div>
+    </div>
+    <!-- Frontend, Mobile & Tooling -->
+    <div class="skill-category">
+      <div class="skill-category-header">
+        <div class="skill-icon" style="background: var(--accent-dim);">&#128241;</div>
+        <div class="skill-category-title">Frontend, Mobile & Tooling</div>
       </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">Prompt Engineering</span><span class="skill-bar-pct">90%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent3" data-width="90"></div></div>
-      </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">n8n / Webhooks</span><span class="skill-bar-pct">82%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent3" data-width="82"></div></div>
-      </div>
-      <div class="skill-bar-wrapper">
-        <div class="skill-bar-header"><span class="skill-bar-name">AI Architecture & Code Review</span><span class="skill-bar-pct">85%</span></div>
-        <div class="skill-bar"><div class="skill-bar-fill fill-accent3" data-width="85"></div></div>
+      <div class="skill-chips">
+        <span class="skill-chip">React</span>
+        <span class="skill-chip">React Native / Expo</span>
+        <span class="skill-chip">Git / CI-CD</span>
       </div>
     </div>
   </div>
@@ -1111,19 +1249,27 @@
   </div>
   <div class="timeline fade-in">
     <div class="timeline-item">
-      <div class="timeline-date">Sep 2025 &mdash; Nov 2025</div>
-      <div class="timeline-title">Backend Developer & AI Consultant</div>
-      <div class="timeline-org">The Zeya App &middot; Miami, FL (Remote)</div>
+      <div class="timeline-date">Dec 2025 &mdash; Present</div>
+      <div class="timeline-title">Technical Co-Founder</div>
+      <div class="timeline-org">Ktwo.ai LLC &middot; Remote</div>
       <div class="timeline-desc">
-        Built and maintained backend services and cloud infrastructure for a mobile marketplace with 24,000+ downloads and thousands of daily active users. Managed AWS environments including deployment pipelines, scaling configs, and reliability monitoring. Developed AI-powered automation systems for content moderation and process optimization. Advised leadership on architecture, scalability, and AI integration strategy.
+        Technical co-founder of Ktwo, an AI operations product for home-services businesses (two co-founders; I own product and engineering). Rebuilt the platform from a Replit-generated portal into an engineered codebase &mdash; decomposed a 2,500-line route monolith and a 3,600-line dashboard, removed 15k dead lines. Architected a three-stage agent pipeline: a Haiku classifier feeding a deterministic orchestrator, with Sonnet generating responses inside enforced business rules and prompt-injection isolation. Migrated to Supabase Auth with mandatory 2FA (TOTP and SMS), AAL2 enforcement, and audited time-boxed impersonation; moved rate-limit state into Postgres for multi-replica safety and enforced structural tenant isolation via a tenant-scoped query wrapper with a static tripwire test. Introduced the repo's first test suite (Vitest) and deployed to Railway behind a gated waitlist.
       </div>
     </div>
     <div class="timeline-item">
-      <div class="timeline-date">Aug 2024 &mdash; Present</div>
-      <div class="timeline-title">Founder & Lead Backend Engineer</div>
+      <div class="timeline-date">Sep 2025 &mdash; Nov 2025</div>
+      <div class="timeline-title">AI Consultant</div>
+      <div class="timeline-org">The Zeya App &middot; Miami, FL (Remote)</div>
+      <div class="timeline-desc">
+        Contract engagement with a venture-backed consumer marketplace during its pre-seed phase, working directly with the founder and the development team. Audited the codebase, cloud infrastructure, and AI implementation; presented security, architecture, and cost findings with recommendations. Advised on AI integration strategy going into the raise &mdash; the company closed a $2.45M seed round following the engagement.
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">Jul 2025 &mdash; Nov 2025</div>
+      <div class="timeline-title">Founder & Lead Engineer</div>
       <div class="timeline-org">Ktwo.ai LLC &middot; Remote</div>
       <div class="timeline-desc">
-        Founded an AI-driven app development agency building custom iOS/Android apps for SMB clients with React Native, Node.js, and Supabase. Engineered a product sync pipeline integrating DanDomain's SOAP API &mdash; enabling a Danish e-commerce client to sync 400+ products to Supabase via one-click. Built a custom CRM and analytics platform from scratch. Integrated Apple Pay, Google Pay, Stripe, and MitID age verification for Danish regulatory compliance.
+        Built and operated a client portal for small businesses (sole engineer, working with one non-technical partner): analytics dashboards, Stripe billing with webhook signature verification, support ticketing with Slack alerts, and five-tier RBAC. Signed and served the company's first paying client, a Danish wine retailer &mdash; after REST and GraphQL attempts failed, cracked the retailer's legacy SOAP/WSDL API and built a catalog sync into Postgres: roughly 430 products with images in about 40 seconds via a field-level diff upsert with orphan deletion. Built a React Native storefront and scaffolded the OnPay-to-DanDomain order loop; the app never launched, blocked on DanDomain's SOAP order API before the engagement ended.
       </div>
     </div>
   </div>
@@ -1137,78 +1283,124 @@
     <p class="section-subtitle">Click any project to expand details</p>
   </div>
   <div class="projects-grid fade-in">
-    <!-- Project: Resume Platform -->
+    <!-- Project: Ktwo AI Operations Platform -->
     <div class="project-card" onclick="toggleProject(this)">
-      <div class="project-banner"><div class="project-banner-bg banner-1">&#127760;</div></div>
+      <div class="project-banner"><div class="project-banner-bg banner-4">&#129302;</div></div>
       <div class="project-body">
         <div class="project-tags">
-          <span class="project-tag">Supabase</span>
           <span class="project-tag purple">Claude API</span>
+          <span class="project-tag">Agentic AI</span>
+          <span class="project-tag pink">TypeScript</span>
+        </div>
+        <h3 class="project-title">Ktwo AI Operations Platform</h3>
+        <p class="project-desc">AI operations product for home-services businesses &mdash; rebuilt from a Replit-generated prototype into an engineered, tested, production-deployed platform.</p>
+        <div class="project-expand-content">
+          <ul>
+            <li>Decomposed a 2,500-line route monolith and a 3,600-line dashboard; removed 15k dead lines</li>
+            <li>Three-stage agent pipeline: Haiku classifier &rarr; deterministic orchestrator &rarr; Sonnet persona, so business rules are enforced in code, not the prompt</li>
+            <li>Prompt-injection isolation at the input boundary</li>
+            <li>Supabase Auth with mandatory 2FA (TOTP and SMS), AAL2 enforcement, and audited time-boxed impersonation</li>
+            <li>Rate-limit state in Postgres for multi-replica safety; structural tenant isolation via a tenant-scoped query wrapper with a static tripwire test</li>
+            <li>First test suite (Vitest); deployed to Railway behind a gated waitlist</li>
+          </ul>
+        </div>
+        <div class="project-footer">
+          <button class="project-expand-btn">+ Expand details</button>
+        </div>
+      </div>
+    </div>
+    <!-- Project: Danish E-Commerce Platform -->
+    <div class="project-card" onclick="toggleProject(this)">
+      <div class="project-banner"><div class="project-banner-bg banner-2">&#128260;</div></div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag">SOAP API</span>
+          <span class="project-tag purple">Node.js</span>
+          <span class="project-tag pink">React Native</span>
+        </div>
+        <h3 class="project-title">Danish E-Commerce Platform</h3>
+        <p class="project-desc">Catalog sync and storefront for a Danish wine retailer &mdash; cracked a legacy SOAP/WSDL API after REST and GraphQL attempts failed, syncing ~430 products with images in about 40 seconds.</p>
+        <div class="project-expand-content">
+          <ul>
+            <li>Bulk call with field pre-selection; field-level diff upsert with orphan deletion instead of full overwrite</li>
+            <li>Three-pass image enrichment with 16-way bounded concurrency and backoff, storing CDN URLs behind an origin-allowlisted proxy</li>
+            <li>Owner managed his catalog from the portal with SKU-based editing</li>
+            <li>React Native storefront with a scaffolded OnPay-to-DanDomain order loop</li>
+            <li>The app never launched &mdash; blocked on DanDomain's SOAP order API before the engagement ended</li>
+          </ul>
+        </div>
+        <div class="project-footer">
+          <button class="project-expand-btn">+ Expand details</button>
+        </div>
+      </div>
+    </div>
+    <!-- Project: Startup AI & Codebase Audit -->
+    <div class="project-card" onclick="toggleProject(this)">
+      <div class="project-banner"><div class="project-banner-bg banner-3">&#128269;</div></div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag pink">AI Consulting</span>
+          <span class="project-tag">Security</span>
+          <span class="project-tag purple">Architecture</span>
+        </div>
+        <h3 class="project-title">Startup Codebase & AI Audit</h3>
+        <p class="project-desc">Paid engagement auditing the codebase, cloud infrastructure, and AI implementation of a venture-backed consumer marketplace ahead of its $2.45M raise.</p>
+        <div class="project-expand-content">
+          <ul>
+            <li>Worked directly with the founder and the development team during the pre-seed phase</li>
+            <li>Presented security, architecture, and cost findings with recommendations</li>
+            <li>Advised on AI integration strategy going into the raise; the company closed a $2.45M seed round following the engagement</li>
+          </ul>
+        </div>
+        <div class="project-footer">
+          <button class="project-expand-btn">+ Expand details</button>
+        </div>
+      </div>
+    </div>
+    <!-- Project: Star Citizen Political Map -->
+    <div class="project-card" onclick="toggleProject(this)">
+      <div class="project-banner"><div class="project-banner-bg banner-1">&#127756;</div></div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag">JavaScript</span>
+          <span class="project-tag purple">Voronoi</span>
+          <span class="project-tag pink">Playwright</span>
+        </div>
+        <h3 class="project-title">Star Citizen Political Map</h3>
+        <p class="project-desc">A political map of the Star Citizen universe, drawn the way grand-strategy games draw galaxies &mdash; faction territories, hyperlane-style jump routes, and a route planner that respects ship size. One self-contained HTML file, no backend.</p>
+        <div class="project-expand-content">
+          <ul>
+            <li>Double-click any of the 90 systems to open an orbital diagram of every planet, moon, station, and jump point on record &mdash; about 860 objects total</li>
+            <li>No border is hand-drawn: an ownership resolver decides who owns each system, then a Voronoi pass assigns every point in space to its nearest seed</li>
+            <li>Jittered grid of "void" seeds keeps deep space neutral; lane seeds make territory follow the jump network instead of blobbing</li>
+            <li>Cohesion handling: unclaimed systems get a weighted neutral pocket, and lane seeds are capped at a fixed reach from their endpoint</li>
+            <li>The engine has its own cohesion tests, and a Playwright script opens all 90 system views headlessly and fails the build on any page error</li>
+          </ul>
+        </div>
+        <div class="project-footer">
+          <button class="project-expand-btn">+ Expand details</button>
+          <div class="project-links">
+            <a href="https://andersktwo.github.io/SC-map/" target="_blank" class="project-link" onclick="event.stopPropagation()">Live &#8599;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Project: Interactive Resume Platform -->
+    <div class="project-card" onclick="toggleProject(this)">
+      <div class="project-banner"><div class="project-banner-bg banner-1">&#128172;</div></div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag purple">Claude API</span>
+          <span class="project-tag">Supabase</span>
           <span class="project-tag pink">GitHub Pages</span>
         </div>
         <h3 class="project-title">Interactive Resume Platform</h3>
-        <p class="project-desc">Full-stack resume site with an AI chatbot, admin analytics dashboard, no-code profile editor, and visitor tracking &mdash; all hosted serverless on GitHub Pages + Supabase Edge Functions.</p>
+        <p class="project-desc">This site &mdash; a serverless interactive resume with an AI chatbot that answers recruiter questions, plus an analytics and content admin dashboard.</p>
         <div class="project-expand-content">
           <ul>
-            <li>AI chatbot powered by Claude Haiku with email-gated access and 20-message limits</li>
-            <li>Admin dashboard with lead tracking, traffic analytics, LLM cost monitoring, and device filtering</li>
-            <li>No-code Profile Editor to update all resume content live without touching code</li>
-            <li>Inline responsive preview mode with desktop, tablet, and mobile device toggles</li>
-            <li>Serverless architecture: static frontend on GitHub Pages, edge functions on Supabase</li>
-            <li>JWT-protected admin endpoints with Supabase Auth</li>
-          </ul>
-        </div>
-        <div class="project-footer">
-          <button class="project-expand-btn">+ Expand details</button>
-        </div>
-      </div>
-    </div>
-    <!-- Project: Danish Wine Merchant -->
-    <div class="project-card" onclick="toggleProject(this)">
-      <div class="project-banner"><div class="project-banner-bg banner-2">&#127863;</div></div>
-      <div class="project-body">
-        <div class="project-tags">
-          <span class="project-tag purple">React Native</span>
-          <span class="project-tag">Node.js</span>
-          <span class="project-tag pink">MitID</span>
-          <span class="project-tag">SOAP API</span>
-        </div>
-        <h3 class="project-title">Danish Wine Merchant Platform</h3>
-        <p class="project-desc">Developed a custom mobile operating system and integrated CRM for a Danish wine merchant, focusing on high-performance retail infrastructure and automated data management.</p>
-        <div class="project-expand-content">
-          <ul>
-            <li>Engineered a complex middleware layer to ingest and sanitize a catalog of over 400 legacy database records</li>
-            <li>Automatically parsed raw HTML product descriptions into a structured, mobile-optimized interface</li>
-            <li>Integrated MitID-based age verification &mdash; Denmark's national digital ID system &mdash; for automated regulatory compliance on alcohol sales</li>
-            <li>Built a native transaction engine supporting Apple Pay and Google Pay in DKK</li>
-            <li>Developed an intelligent notification module targeting users based on historical purchase data and membership tiers</li>
-            <li>Custom CRM with real-time user download tracking, engagement metrics, and order management</li>
-            <li>Product sync pipeline integrating DanDomain's legacy SOAP API for one-click catalog refresh</li>
-          </ul>
-        </div>
-        <div class="project-footer">
-          <button class="project-expand-btn">+ Expand details</button>
-        </div>
-      </div>
-    </div>
-    <!-- Project: AI Content Moderation -->
-    <div class="project-card" onclick="toggleProject(this)">
-      <div class="project-banner"><div class="project-banner-bg banner-3">&#129302;</div></div>
-      <div class="project-body">
-        <div class="project-tags">
-          <span class="project-tag pink">Python</span>
-          <span class="project-tag">AI/ML</span>
-          <span class="project-tag purple">AWS</span>
-        </div>
-        <h3 class="project-title">AI Content Moderation System</h3>
-        <p class="project-desc">Multi-agent AI verification system for a mobile marketplace with 24K+ downloads &mdash; automated content review and process optimization.</p>
-        <div class="project-expand-content">
-          <ul>
-            <li>Developed AI-powered content classification for marketplace listings</li>
-            <li>Automated flagging and review workflow reducing manual moderation workload</li>
-            <li>Process optimization system identifying bottlenecks in content pipeline</li>
-            <li>Integrated with existing AWS infrastructure and deployment pipelines</li>
-            <li>Serving thousands of daily active users with high reliability</li>
+            <li>AI chatbot powered by Claude via a Supabase Edge Function, with per-email message limits and token tracking</li>
+            <li>Visitor analytics with owner-device filtering and a private admin dashboard</li>
+            <li>Static hosting on GitHub Pages with serverless functions &mdash; no backend to maintain</li>
           </ul>
         </div>
         <div class="project-footer">
@@ -1232,7 +1424,7 @@
         <h3>BBA in Artificial Intelligence for Business Technology</h3>
         <div class="school">Herbert Business School &middot; University of Miami</div>
         <div class="details">
-          <strong>Expected:</strong> May 2027<br>
+          <strong>Expected:</strong> December 2027<br>
           <strong>Activities:</strong> Phi Chi Theta Business Fraternity
         </div>
         <button class="coursework-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '- Hide coursework' : '+ Show relevant coursework'">+ Show relevant coursework</button>
@@ -1274,12 +1466,18 @@
     <h2 class="section-title">Have Questions? Ask Away</h2>
     <p class="section-subtitle">Chat with an AI trained on everything about me</p>
   </div>
-  <div class="chatbot-section fade-in">
+  <div class="chat-dock-placeholder" id="chatDockPlaceholder" style="display: none;">
+    Chat is docked to the side &rarr;&nbsp;&nbsp;<button onclick="toggleDock()">Bring it back</button>
+  </div>
+  <div class="chatbot-section fade-in" id="chatbotSection">
     <div class="chatbot-header">
       <div class="chatbot-avatar">&#129302;</div>
       <div class="chatbot-header-text">
         <h3>AndersBot</h3>
         <p>Ask me anything about Anders &mdash; skills, experience, goals, or fit</p>
+      </div>
+      <div class="chatbot-header-actions">
+        <button class="chat-action-btn" id="dockBtn" title="Dock chat to the side" onclick="toggleDock()">&#8677;</button>
       </div>
     </div>
 
@@ -1565,11 +1763,7 @@ async function loadSiteContent() {
       document.querySelector('#projects .section-title').textContent = pr.sectionTitle;
       document.querySelector('.projects-grid').innerHTML = pr.items.map(p => `
         <div class="project-card" onclick="toggleProject(this)">
-          ${p.mediaUrl
-            ? (p.mediaUrl.match(/\.(mp4|webm)$/i)
-              ? `<div class="project-banner"><video class="project-banner-media" src="${escAttr(p.mediaUrl)}" autoplay muted loop playsinline></video></div>`
-              : `<div class="project-banner"><img class="project-banner-media" src="${escAttr(p.mediaUrl)}" alt="${escText(p.title)}"></div>`)
-            : `<div class="project-banner"><div class="project-banner-bg ${p.bannerClass}">${p.emoji}</div></div>`}
+          <div class="project-banner"><div class="project-banner-bg ${p.bannerClass}">${p.emoji}</div></div>
           <div class="project-body">
             <div class="project-tags">
               ${p.tags.map(t => `<span class="project-tag ${t.color}">${escText(t.text)}</span>`).join('')}
@@ -1578,6 +1772,19 @@ async function loadSiteContent() {
             <p class="project-desc">${escText(p.desc)}</p>
             <div class="project-expand-content">
               <ul>${p.details.map(d => `<li>${escText(d)}</li>`).join('')}</ul>
+              ${(p.media && p.media.length) ? `
+                <div class="project-media-gallery">
+                  ${p.media.map((m, i) => {
+                    if (m.url.match(/\.(mp4|webm)$/i)) {
+                      return `<div class="project-media-item" onclick="event.stopPropagation(); openLightbox(${JSON.stringify(p.media.map(x=>x.url))}, ${i})"><video src="${escAttr(m.url)}" muted loop playsinline onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0;"></video></div>`;
+                    } else if (m.url.match(/\.pdf$/i)) {
+                      return `<div class="project-media-item" onclick="event.stopPropagation(); window.open('${escAttr(m.url)}','_blank')"><div class="pdf-thumb"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>${escText(m.name || 'PDF')}</div></div>`;
+                    } else {
+                      return `<div class="project-media-item" onclick="event.stopPropagation(); openLightbox(${JSON.stringify(p.media.filter(x=>!x.url.match(/\\.pdf$/i)).map(x=>x.url))}, ${p.media.filter(x=>!x.url.match(/\\.pdf$/i)).indexOf(m)})"><img src="${escAttr(m.url)}" alt="${escText(m.name || p.title)}" loading="lazy"></div>`;
+                    }
+                  }).join('')}
+                </div>
+              ` : ''}
             </div>
             <div class="project-footer">
               <button class="project-expand-btn">+ Expand details</button>
@@ -1652,6 +1859,38 @@ function toggleProject(card) {
   }
 }
 
+// ========== MEDIA LIGHTBOX ==========
+function openLightbox(urls, index) {
+  const lb = document.createElement('div');
+  lb.className = 'media-lightbox';
+  let cur = index;
+  function render() {
+    const url = urls[cur];
+    const isVideo = url.match(/\.(mp4|webm)$/i);
+    lb.innerHTML = `
+      <button class="media-lightbox-close">&times;</button>
+      ${urls.length > 1 ? '<button class="media-lightbox-nav prev">&#8249;</button>' : ''}
+      ${isVideo
+        ? `<video src="${url}" controls autoplay style="max-width:90vw;max-height:90vh;border-radius:12px;"></video>`
+        : `<img src="${url}" style="max-width:90vw;max-height:90vh;border-radius:12px;object-fit:contain;">`}
+      ${urls.length > 1 ? '<button class="media-lightbox-nav next">&#8250;</button>' : ''}
+    `;
+    lb.querySelector('.media-lightbox-close').onclick = () => lb.remove();
+    const prev = lb.querySelector('.prev');
+    const next = lb.querySelector('.next');
+    if (prev) prev.onclick = (e) => { e.stopPropagation(); cur = (cur - 1 + urls.length) % urls.length; render(); };
+    if (next) next.onclick = (e) => { e.stopPropagation(); cur = (cur + 1) % urls.length; render(); };
+  }
+  render();
+  lb.onclick = (e) => { if (e.target === lb) lb.remove(); };
+  document.body.appendChild(lb);
+  document.addEventListener('keydown', function handler(e) {
+    if (e.key === 'Escape') { lb.remove(); document.removeEventListener('keydown', handler); }
+    if (e.key === 'ArrowLeft') { cur = (cur - 1 + urls.length) % urls.length; render(); }
+    if (e.key === 'ArrowRight') { cur = (cur + 1) % urls.length; render(); }
+  });
+}
+
 // ========== CHATBOT ==========
 const EDGE_FN_URL = 'https://kguucauoxscxreaewiwv.supabase.co/functions/v1/resume-chat';
 let chatHistory = [];
@@ -1674,7 +1913,19 @@ function submitEmail() {
   userCompany = document.getElementById('companyInput').value.trim();
   errorDiv.textContent = '';
   document.getElementById('emailGate').style.display = 'none';
-  document.getElementById('chatArea').style.display = 'block';
+  document.getElementById('chatArea').style.display = 'flex';
+}
+
+function toggleDock() {
+  const sec = document.getElementById('chatbotSection');
+  const docked = sec.classList.toggle('docked');
+  document.body.classList.toggle('chat-docked', docked);
+  const btn = document.getElementById('dockBtn');
+  btn.innerHTML = docked ? '&#8676;' : '&#8677;';
+  btn.title = docked ? 'Return chat to the page' : 'Dock chat to the side';
+  document.getElementById('chatDockPlaceholder').style.display = docked ? 'block' : 'none';
+  if (!docked) sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  scrollChat();
 }
 
 async function sendMessage() {
@@ -1716,7 +1967,7 @@ async function sendMessage() {
 
     // If limit reached, disable input
     if (data.error === 'limit_reached') {
-      addMessage(formatMarkdown(reply), 'bot');
+      typeMessage(reply);
       document.querySelector('.chatbot-input-area').style.display = 'none';
       document.getElementById('messagesRemaining').textContent = 'Message limit reached';
       return;
@@ -1726,7 +1977,7 @@ async function sendMessage() {
     chatHistory.push({ role: 'assistant', content: reply });
     if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
 
-    addMessage(formatMarkdown(reply), 'bot');
+    typeMessage(reply);
   } catch (err) {
     typingDiv.remove();
     addMessage("Sorry, I'm having trouble connecting right now. Feel free to reach out to Anders directly at <a href='mailto:andzoe@outlook.com' style='color: var(--accent);'>andzoe@outlook.com</a>!", 'bot');
@@ -1746,6 +1997,26 @@ function addMessage(content, sender) {
   scrollChat();
 }
 
+// Typewriter effect: reveals the bot's reply word by word
+function typeMessage(text) {
+  const div = document.createElement('div');
+  div.className = 'chat-message bot';
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  div.appendChild(bubble);
+  document.getElementById('chatMessages').appendChild(div);
+
+  const words = text.split(' ');
+  let i = 0;
+  (function tick() {
+    i++;
+    const done = i >= words.length;
+    bubble.innerHTML = formatMarkdown(words.slice(0, i).join(' ')) + (done ? '' : '<span class="typing-cursor"></span>');
+    scrollChat();
+    if (!done) setTimeout(tick, 25 + Math.random() * 40);
+  })();
+}
+
 function scrollChat() {
   const container = document.getElementById('chatMessages');
   container.scrollTop = container.scrollHeight;
@@ -1754,6 +2025,7 @@ function scrollChat() {
 function formatMarkdown(text) {
   return text
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*\n]+)\*/g, '<em>$1</em>')
     .replace(/\n\n/g, '<br><br>')
     .replace(/\n- /g, '<br>\u2022 ')
     .replace(/\n\u2022 /g, '<br>\u2022 ')

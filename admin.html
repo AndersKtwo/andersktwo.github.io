@@ -83,10 +83,11 @@
     border: none;
     color: var(--text3);
     cursor: pointer;
-    font-size: 1rem;
     padding: 0;
-    line-height: 1;
+    line-height: 0;
     transition: color 0.2s;
+    display: flex;
+    align-items: center;
   }
   .toggle-pw:hover { color: var(--accent); }
   .login-btn {
@@ -109,16 +110,6 @@
     margin-top: 0.5rem;
     min-height: 1.2rem;
   }
-  .temp-notice {
-    background: rgba(255,107,157,0.1);
-    border: 1px solid rgba(255,107,157,0.2);
-    border-radius: 8px;
-    padding: 0.6rem 0.8rem;
-    font-size: 0.78rem;
-    color: var(--accent3);
-    margin-top: 1rem;
-  }
-
   /* DASHBOARD */
   .dashboard { display: none; }
   .dashboard.active { display: block; }
@@ -733,11 +724,10 @@
     <input type="email" id="loginEmail" placeholder="Email" value="andzoe@outlook.com">
     <div class="password-wrapper">
       <input type="password" id="loginPassword" placeholder="Password" onkeypress="if(event.key==='Enter') login()">
-      <button class="toggle-pw" onclick="togglePassword('loginPassword', this)" type="button" title="Show password">&#128065;</button>
+      <button class="toggle-pw" onclick="togglePassword('loginPassword', this)" type="button" title="Show password"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
     </div>
     <button class="login-btn" onclick="login()">Sign In</button>
     <div class="login-error" id="loginError"></div>
-    <div class="temp-notice">Temporary password: <strong>TempPass2026</strong><br>Change it in Settings after logging in.</div>
   </div>
 </div>
 
@@ -1159,10 +1149,6 @@ async function showDashboard(session) {
   document.getElementById('dashboard').classList.add('active');
   currentToken = session.access_token;
 
-  // Remove temp password notice after first login
-  const notice = document.querySelector('.temp-notice');
-  if (notice) notice.remove();
-
   await loadAnalytics(currentToken);
 }
 
@@ -1380,9 +1366,11 @@ function togglePassword(inputId, btn) {
   const input = document.getElementById(inputId);
   if (input.type === 'password') {
     input.type = 'text';
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
     btn.style.color = 'var(--accent)';
   } else {
     input.type = 'password';
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
     btn.style.color = '';
   }
 }
@@ -1736,7 +1724,7 @@ function addExperience(data) {
 }
 
 function addProject(data) {
-  const d = data || { emoji: '🔧', bannerClass: 'banner-1', tags: [], title: '', desc: '', details: [] };
+  const d = data || { emoji: '🔧', bannerClass: 'banner-1', media: [], tags: [], title: '', desc: '', details: [] };
   const container = document.getElementById('projects-repeater');
   const div = document.createElement('div');
   div.className = 'repeater-item';
@@ -1762,11 +1750,21 @@ function addProject(data) {
       </div>
     </div>
     <div class="field-group">
-      <label class="field-label">Banner Media (image or video — replaces emoji)</label>
-      <div style="display:flex; gap:0.5rem; align-items:center;">
-        <input type="file" class="proj-media-file" accept="image/*,video/mp4,video/webm" onchange="uploadProjectMedia(this)" style="font-size:0.78rem; color:var(--text2);">
-        <input class="field-input proj-media-url" placeholder="Or paste URL" value="${escHtml(d.mediaUrl || '')}" style="flex:1;">
-        ${d.mediaUrl ? '<button class="device-remove-btn" onclick="this.parentElement.querySelector(\'.proj-media-url\').value=\\\'\\\'; this.remove();" style="white-space:nowrap;">Clear</button>' : ''}
+      <label class="field-label">Media Gallery (up to 10 — images, videos, PDFs)</label>
+      <div class="proj-media-list" style="display:flex; flex-direction:column; gap:0.5rem;">
+        ${(d.media || []).map((m, i) => `
+          <div class="proj-media-row" style="display:flex; gap:0.5rem; align-items:center; background:var(--bg2); padding:0.4rem 0.6rem; border-radius:8px; border:1px solid var(--border);">
+            <span style="font-size:0.75rem; color:var(--text3); min-width:18px;">${i+1}.</span>
+            ${m.url.match(/\\.(mp4|webm)$/i) ? '<span style="font-size:0.85rem;">🎬</span>' : m.url.match(/\\.pdf$/i) ? '<span style="font-size:0.85rem;">📄</span>' : '<span style="font-size:0.85rem;">🖼️</span>'}
+            <input class="field-input proj-media-url-item" value="${escHtml(m.url)}" style="flex:1; font-size:0.78rem;" readonly>
+            <span style="font-size:0.72rem; color:var(--text3); max-width:100px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escHtml(m.name || '')}</span>
+            <button class="device-remove-btn" onclick="this.parentElement.remove()" style="white-space:nowrap;">Remove</button>
+          </div>
+        `).join('')}
+      </div>
+      <div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.5rem;">
+        <input type="file" class="proj-media-file" accept="image/*,video/mp4,video/webm,.pdf" onchange="uploadProjectMedia(this)" style="font-size:0.78rem; color:var(--text2); flex:1;">
+        <span style="font-size:0.72rem; color:var(--text3);" class="proj-media-count">${(d.media||[]).length}/10</span>
       </div>
     </div>
     <div class="field-group">
@@ -1789,15 +1787,24 @@ async function uploadProjectMedia(input) {
   const file = input.files[0];
   if (!file) return;
 
-  const urlInput = input.parentElement.querySelector('.proj-media-url');
-  urlInput.value = 'Uploading...';
+  const projItem = input.closest('.repeater-item');
+  const mediaList = projItem.querySelector('.proj-media-list');
+  const countEl = projItem.querySelector('.proj-media-count');
+  const currentCount = mediaList.querySelectorAll('.proj-media-row').length;
 
+  if (currentCount >= 10) {
+    alert('Maximum 10 media files per project.');
+    input.value = '';
+    return;
+  }
+
+  input.disabled = true;
   const ext = file.name.split('.').pop();
   const fileName = 'project-' + Date.now() + '.' + ext;
 
   const { data: { session } } = await sb.auth.getSession();
   if (!session) {
-    urlInput.value = '';
+    input.disabled = false;
     alert('Session expired. Please log in again.');
     return;
   }
@@ -1815,11 +1822,32 @@ async function uploadProjectMedia(input) {
     if (!res.ok) throw new Error('Upload failed');
 
     const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/project-media/${fileName}`;
-    urlInput.value = publicUrl;
+    const num = currentCount + 1;
+    const icon = file.type.startsWith('video/') ? '🎬' : file.type === 'application/pdf' ? '📄' : '🖼️';
+    const row = document.createElement('div');
+    row.className = 'proj-media-row';
+    row.style.cssText = 'display:flex; gap:0.5rem; align-items:center; background:var(--bg2); padding:0.4rem 0.6rem; border-radius:8px; border:1px solid var(--border);';
+    row.innerHTML = `
+      <span style="font-size:0.75rem; color:var(--text3); min-width:18px;">${num}.</span>
+      <span style="font-size:0.85rem;">${icon}</span>
+      <input class="field-input proj-media-url-item" value="${publicUrl}" style="flex:1; font-size:0.78rem;" readonly>
+      <span style="font-size:0.72rem; color:var(--text3); max-width:100px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escHtml(file.name)}</span>
+      <button class="device-remove-btn" onclick="this.parentElement.remove(); updateMediaCount(this)" style="white-space:nowrap;">Remove</button>
+    `;
+    mediaList.appendChild(row);
+    countEl.textContent = num + '/10';
   } catch (err) {
-    urlInput.value = '';
     alert('Upload failed: ' + err.message);
   }
+
+  input.value = '';
+  input.disabled = false;
+}
+
+function updateMediaCount(el) {
+  const projItem = el.closest('.repeater-item');
+  const count = projItem.querySelectorAll('.proj-media-row').length;
+  projItem.querySelector('.proj-media-count').textContent = count + '/10';
 }
 
 function addSkillCategory(data) {
@@ -1984,10 +2012,14 @@ function collectProfileData() {
         if (t.startsWith('k:')) return { text: t.slice(2), color: 'pink' };
         return { text: t, color: '' };
       });
+      const media = [...el.querySelectorAll('.proj-media-row')].map(row => ({
+        url: row.querySelector('.proj-media-url-item').value,
+        name: row.querySelector('span[style*="max-width"]')?.textContent || '',
+      })).filter(m => m.url);
       return {
         emoji: el.querySelector('.proj-emoji-input').value,
         bannerClass: el.querySelector('.proj-banner-input').value,
-        mediaUrl: el.querySelector('.proj-media-url').value || '',
+        media,
         tags,
         title: el.querySelector('.proj-title-input').value,
         desc: el.querySelector('.proj-desc-input').value,
