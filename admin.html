@@ -732,6 +732,21 @@
   </div>
 </div>
 
+<!-- PASSWORD RECOVERY (from reset link) -->
+<div class="login-page hidden" id="recoveryPage">
+  <div class="login-box">
+    <h1>Set a new password</h1>
+    <p class="sub">You opened a password reset link.</p>
+    <div class="password-wrapper">
+      <input type="password" id="recoveryPassword" placeholder="New password (min 8 characters)">
+      <button class="toggle-pw" onclick="togglePassword('recoveryPassword', this)" type="button" title="Show password"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+    </div>
+    <input type="password" id="recoveryConfirm" placeholder="Confirm new password" style="margin-top:0.6rem;" onkeypress="if(event.key==='Enter') setRecoveryPassword()">
+    <button class="login-btn" onclick="setRecoveryPassword()">Set password &amp; continue</button>
+    <div class="login-error" id="recoveryError"></div>
+  </div>
+</div>
+
 <!-- DASHBOARD -->
 <div class="dashboard" id="dashboard">
   <div class="top-bar">
@@ -1074,6 +1089,9 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Capture recovery arrival before supabase-js parses & clears the URL hash
+const arrivingViaRecovery = /type=recovery/.test(location.hash);
+
 // Preview mode
 const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 const previewSiteUrl = isLocal ? location.origin + '/index.html' : 'https://andersktwo.github.io';
@@ -1111,11 +1129,19 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Check existing session on load
+// Check existing session on load — but never auto-open the dashboard during a recovery flow
 (async () => {
+  if (arrivingViaRecovery) { showRecoveryScreen(); return; }
   const { data: { session } } = await sb.auth.getSession();
   if (session) showDashboard(session);
 })();
+
+function showRecoveryScreen() {
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('active');
+  document.getElementById('recoveryPage').classList.remove('hidden');
+  document.getElementById('recoveryPassword')?.focus();
+}
 
 async function login() {
   const email = document.getElementById('loginEmail').value.trim();
@@ -1157,23 +1183,48 @@ async function forgotPassword() {
   }
 }
 
-// Arriving from a password-reset email link: sign in and jump to Settings to set a new password
-sb.auth.onAuthStateChange((event, session) => {
-  if (event === 'PASSWORD_RECOVERY' && session) {
-    showDashboard(session);
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
-    document.getElementById('tab-settings').classList.add('active');
-    const settingsBtn = [...document.querySelectorAll('.tab-link')].find(b => b.textContent.trim() === 'Settings');
-    if (settingsBtn) settingsBtn.classList.add('active');
-    const msgEl = document.getElementById('settingsMsg');
-    if (msgEl) {
-      msgEl.textContent = 'Signed in via reset link — set your new password below now.';
-      msgEl.className = 'settings-msg success';
-    }
-    document.getElementById('newPassword')?.focus();
-  }
+// Arriving from a password-reset link: show ONLY the set-password screen, never the dashboard.
+// The recovery link creates a live session, so we must not reveal any dashboard data until
+// a new password is set and the user logs in fresh.
+sb.auth.onAuthStateChange((event) => {
+  if (event === 'PASSWORD_RECOVERY') showRecoveryScreen();
 });
+
+async function setRecoveryPassword() {
+  const pw = document.getElementById('recoveryPassword').value;
+  const confirm = document.getElementById('recoveryConfirm').value;
+  const errorEl = document.getElementById('recoveryError');
+  errorEl.style.color = '';
+
+  if (!pw || pw.length < 8) {
+    errorEl.textContent = 'Password must be at least 8 characters.';
+    return;
+  }
+  if (pw !== confirm) {
+    errorEl.textContent = 'Passwords do not match.';
+    return;
+  }
+
+  errorEl.style.color = 'var(--text2)';
+  errorEl.textContent = 'Updating...';
+  const { error } = await sb.auth.updateUser({ password: pw });
+  if (error) {
+    errorEl.style.color = '';
+    errorEl.textContent = error.message;
+    return;
+  }
+
+  // Force a fresh login with the new password — don't hand dashboard access to the recovery session
+  await sb.auth.signOut();
+  document.getElementById('recoveryPage').classList.add('hidden');
+  document.getElementById('recoveryPassword').value = '';
+  document.getElementById('recoveryConfirm').value = '';
+  const loginErr = document.getElementById('loginError');
+  loginErr.style.color = 'var(--accent)';
+  loginErr.textContent = 'Password updated — sign in with your new password.';
+  document.getElementById('loginPage').classList.remove('hidden');
+  document.getElementById('loginPassword')?.focus();
+}
 
 async function logout() {
   await sb.auth.signOut();
