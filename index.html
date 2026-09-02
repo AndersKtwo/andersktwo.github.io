@@ -1832,7 +1832,7 @@ let userEmail = '';
 let userName = '';
 let userCompany = '';
 
-function submitEmail() {
+async function submitEmail() {
   const input = document.getElementById('emailInput');
   const errorDiv = document.getElementById('emailError');
   const email = input.value.trim();
@@ -1848,6 +1848,36 @@ function submitEmail() {
   errorDiv.textContent = '';
   document.getElementById('emailGate').style.display = 'none';
   document.getElementById('chatArea').style.display = 'flex';
+  syncRemaining();
+}
+
+// Ask the server how many messages this email/network actually has left,
+// so a refresh or re-signup doesn't show a fresh 20
+async function syncRemaining() {
+  try {
+    const res = await fetch(EDGE_FN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ check: true, email: userEmail }),
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (typeof data.remaining !== 'number') return;
+
+    const remainingEl = document.getElementById('messagesRemaining');
+    if (data.remaining <= 0) {
+      addMessage("You've reached the 20-message limit. Feel free to reach out to Anders directly at <a href='mailto:andzoe@outlook.com' style='color: var(--accent);'>andzoe@outlook.com</a>!", 'bot');
+      document.querySelector('.chatbot-input-area').style.display = 'none';
+      document.getElementById('chatSuggestions').style.display = 'none';
+      remainingEl.textContent = 'Message limit reached';
+      remainingEl.style.color = 'var(--accent3)';
+      return;
+    }
+    remainingEl.textContent = data.remaining + ' message' + (data.remaining !== 1 ? 's' : '') + ' remaining';
+    if (data.remaining <= 3) remainingEl.style.color = 'var(--accent3)';
+  } catch (err) {
+    // Counter keeps its default; the server still enforces the limit on send
+  }
 }
 
 function toggleDock() {
