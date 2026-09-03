@@ -31,6 +31,15 @@ Because both paths read from the same place, they cannot drift — as long as yo
 - `projects.items[]` support optional `links: [{label, href}]` rendered in the card footer, and `media: [{url, name}]` galleries.
 - The `site-content` GET is public but excludes the admin-only keys (`owner_devices`, `owner_visitor_ids`); writes require the admin's Supabase Auth JWT.
 
+## Edge functions
+
+Source for the deployed Supabase edge functions is versioned under [supabase/functions/](supabase/functions/) (resume-chat, track, site-content, admin-analytics; setup-admin is deployed but not yet versioned). Deploys happen through the Supabase MCP/dashboard — keep these files in sync when redeploying. SQL changes are recorded in [supabase/migrations/](supabase/migrations/).
+
+Abuse controls (all counters live in the `rate_limit_buckets` table via the atomic `bump_rate_limit()` SQL function):
+- **resume-chat**: 20 messages lifetime per email, 20 per IP per rolling 24h, 300 globally per rolling 24h; chat history is validated (max 6 items, user/assistant roles, 2,000 chars each). Rate-limit DB errors fail closed (503) since an open failure would be unmetered Anthropic spend.
+- **track**: 100 page-view events per IP per rolling 24h; over-limit events are dropped silently.
+- The Anthropic API key's spend limit is set in the Anthropic Console, not in code.
+
 ## Style conventions
 
 - No em-dashes in content. Use a colon, comma, or period in prose; a plain hyphen `-` in titles, headings, and date ranges.
