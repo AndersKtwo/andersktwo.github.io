@@ -24,6 +24,13 @@ function esc(s) {
 function escAttr(s) {
   return esc(s).replace(/"/g, '&quot;');
 }
+// About paragraphs: escape everything, then re-allow only the highlight span
+// markup (mirrors highlightText() in index.html's runtime renderer).
+function highlightText(s) {
+  return esc(s)
+    .replace(/&lt;span class="highlight"&gt;/g, '<span class="highlight">')
+    .replace(/&lt;\/span&gt;/g, '</span>');
+}
 
 // ---------- Section templates (mirror the render logic in index.html's loadSiteContent) ----------
 
@@ -42,7 +49,7 @@ function renderHero(h) {
 }
 
 function renderAbout(a) {
-  const paragraphs = a.paragraphs.map(p => `      <p>${p}</p>`).join('\n');
+  const paragraphs = a.paragraphs.map(p => `      <p>${highlightText(p)}</p>`).join('\n');
   const details = a.details.map(d => `      <div class="detail-item">
         <span class="detail-label">${esc(d.label)}</span>
         <span class="detail-value">${esc(d.value)}</span>

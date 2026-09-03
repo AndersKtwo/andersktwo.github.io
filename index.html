@@ -9,9 +9,14 @@
 <meta property="og:description" content="Technical co-founder and AI engineer who takes AI into operating businesses end to end: architecture, build, deployment, and the client relationship. Co-founder of Ktwo.ai.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://andersktwo.github.io">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://andersktwo.github.io/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://andersktwo.github.io/og.png">
 <meta name="twitter:title" content="Anders Zoega - Technical Co-Founder & AI Engineer">
 <meta name="twitter:description" content="Technical co-founder and AI engineer. Co-founder of Ktwo.ai, building AI agents, backend systems, and AI adoption for operating businesses.">
+<link rel="canonical" href="https://andersktwo.github.io/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80' font-family='Inter,sans-serif' font-weight='600'>AZ</text></svg>">
 <style>
   /* ========== RESET & BASE ========== */
@@ -1251,10 +1256,14 @@
             <li>Supabase Auth with mandatory 2FA (TOTP and SMS), AAL2 enforcement, and audited time-boxed impersonation</li>
             <li>Rate-limit state in Postgres for multi-replica safety; structural tenant isolation via a tenant-scoped query wrapper with a static tripwire test</li>
             <li>First test suite (Vitest); deployed to Railway behind a gated waitlist</li>
+            <li>The repo is private; Anders can walk through the code on request</li>
           </ul>
         </div>
         <div class="project-footer">
           <button class="project-expand-btn">+ Expand details</button>
+          <div class="project-links">
+            <a href="https://ktwo.ai" target="_blank" class="project-link" onclick="event.stopPropagation()">Live (waitlist) &#8599;</a>
+          </div>
         </div>
       </div>
     </div>
@@ -1487,11 +1496,6 @@
       <div class="contact-label">LinkedIn</div>
       <div class="contact-value">linkedin.com/in/anders-zoega</div>
     </a>
-    <a href="tel:+12038200086" class="contact-card">
-      <div class="contact-icon">📞</div>
-      <div class="contact-label">Phone</div>
-      <div class="contact-value">(203) 820-0086</div>
-    </a>
     <a href="https://github.com/AndersKtwo" target="_blank" class="contact-card">
       <div class="contact-icon">🐙</div>
       <div class="contact-label">GitHub</div>
@@ -1503,6 +1507,7 @@
 
 <footer>
   <p>Designed & built by <a href="#" class="accent-link">Anders Zoega</a> &middot; &copy; 2026</p>
+  <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.35rem;">This site logs page visits for analytics.</p>
 </footer>
 
 <script>
@@ -1646,7 +1651,7 @@ async function loadSiteContent() {
       const a = data.about;
       document.querySelector('#about .section-label').textContent = a.sectionLabel;
       document.querySelector('#about .section-title').textContent = a.sectionTitle;
-      document.querySelector('.about-text').innerHTML = a.paragraphs.map(p => '<p>' + p + '</p>').join('');
+      document.querySelector('.about-text').innerHTML = a.paragraphs.map(p => '<p>' + highlightText(p) + '</p>').join('');
       document.querySelector('.about-details').innerHTML = a.details.map(d => `
         <div class="detail-item">
           <span class="detail-label">${escText(d.label)}</span>
@@ -1663,7 +1668,7 @@ async function loadSiteContent() {
       document.querySelector('.skills-grid').innerHTML = sk.categories.map(cat => `
         <div class="skill-category">
           <div class="skill-category-header">
-            <div class="skill-icon" style="background: ${cat.iconBg};">${cat.icon}</div>
+            <div class="skill-icon" style="background: ${escAttr(cat.iconBg)};">${escText(cat.icon)}</div>
             <div class="skill-category-title">${escText(cat.title)}</div>
           </div>
           <div class="skill-chips">
@@ -1695,7 +1700,7 @@ async function loadSiteContent() {
       document.querySelector('#projects .section-title').textContent = pr.sectionTitle;
       document.querySelector('.projects-grid').innerHTML = pr.items.map(p => `
         <div class="project-card" onclick="toggleProject(this)">
-          <div class="project-banner"><div class="project-banner-bg ${p.bannerClass}">${p.emoji}</div></div>
+          <div class="project-banner"><div class="project-banner-bg ${escAttr(p.bannerClass)}">${escText(p.emoji)}</div></div>
           <div class="project-body">
             <div class="project-tags">
               ${p.tags.map(t => `<span class="project-tag ${t.color}">${escText(t.text)}</span>`).join('')}
@@ -1745,7 +1750,7 @@ async function loadSiteContent() {
     if (data.additional) {
       document.querySelector('.additional-grid').innerHTML = data.additional.map(a => `
         <div class="additional-card">
-          <div class="additional-icon">${a.icon}</div>
+          <div class="additional-icon">${escText(a.icon)}</div>
           <div class="additional-name">${escText(a.name)}</div>
           <div class="additional-detail">${escText(a.detail)}</div>
         </div>
@@ -1760,7 +1765,7 @@ async function loadSiteContent() {
       document.querySelector('#contact .section-subtitle').textContent = ct.sectionSubtitle;
       document.querySelector('.contact-grid').innerHTML = ct.items.map(c => `
         <a href="${escAttr(c.href)}" ${c.href.startsWith('http') ? 'target="_blank"' : ''} class="contact-card">
-          <div class="contact-icon">${c.icon}</div>
+          <div class="contact-icon">${escText(c.icon)}</div>
           <div class="contact-label">${escText(c.label)}</div>
           <div class="contact-value">${escText(c.value)}</div>
         </a>
@@ -1778,6 +1783,12 @@ async function loadSiteContent() {
 
 function escText(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 function escAttr(s) { return s.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+// About paragraphs: escape everything, then re-allow only the highlight span markup
+function highlightText(s) {
+  return escText(s)
+    .replace(/&lt;span class="highlight"&gt;/g, '<span class="highlight">')
+    .replace(/&lt;\/span&gt;/g, '</span>');
+}
 
 // ========== PROJECT EXPAND ==========
 function toggleProject(card) {
@@ -1804,8 +1815,8 @@ function openLightbox(urls, index) {
       <button class="media-lightbox-close">&times;</button>
       ${urls.length > 1 ? '<button class="media-lightbox-nav prev">&#8249;</button>' : ''}
       ${isVideo
-        ? `<video src="${url}" controls autoplay style="max-width:90vw;max-height:90vh;border-radius:12px;"></video>`
-        : `<img src="${url}" style="max-width:90vw;max-height:90vh;border-radius:12px;object-fit:contain;">`}
+        ? `<video src="${escAttr(url)}" controls autoplay style="max-width:90vw;max-height:90vh;border-radius:12px;"></video>`
+        : `<img src="${escAttr(url)}" style="max-width:90vw;max-height:90vh;border-radius:12px;object-fit:contain;">`}
       ${urls.length > 1 ? '<button class="media-lightbox-nav next">&#8250;</button>' : ''}
     `;
     lb.querySelector('.media-lightbox-close').onclick = () => lb.remove();
@@ -1865,7 +1876,7 @@ async function syncRemaining() {
 
     const remainingEl = document.getElementById('messagesRemaining');
     if (data.remaining <= 0) {
-      addMessage("You've reached the 20-message limit. Feel free to reach out to Anders directly at <a href='mailto:andzoe@outlook.com' style='color: var(--accent);'>andzoe@outlook.com</a>!", 'bot');
+      addMessage("You've reached the 20-message limit. Feel free to reach out to Anders directly at <a href='mailto:andzoe@outlook.com' style='color: var(--accent);'>andzoe@outlook.com</a>!", 'bot', true);
       document.querySelector('.chatbot-input-area').style.display = 'none';
       document.getElementById('chatSuggestions').style.display = 'none';
       remainingEl.textContent = 'Message limit reached';
@@ -1943,7 +1954,7 @@ async function sendMessage() {
     typeMessage(reply);
   } catch (err) {
     typingDiv.remove();
-    addMessage("Sorry, I'm having trouble connecting right now. Feel free to reach out to Anders directly at <a href='mailto:andzoe@outlook.com' style='color: var(--accent);'>andzoe@outlook.com</a>!", 'bot');
+    addMessage("Sorry, I'm having trouble connecting right now. Feel free to reach out to Anders directly at <a href='mailto:andzoe@outlook.com' style='color: var(--accent);'>andzoe@outlook.com</a>!", 'bot', true);
   }
 }
 
@@ -1952,10 +1963,11 @@ function askSuggestion(chip) {
   sendMessage();
 }
 
-function addMessage(content, sender) {
+// Content is escaped by default; allowHtml is only for our own static notices.
+function addMessage(content, sender, allowHtml = false) {
   const div = document.createElement('div');
   div.className = `chat-message ${sender}`;
-  div.innerHTML = `<div class="chat-bubble">${content}</div>`;
+  div.innerHTML = `<div class="chat-bubble">${allowHtml ? content : escText(content)}</div>`;
   document.getElementById('chatMessages').appendChild(div);
   scrollChat();
 }
@@ -1985,8 +1997,13 @@ function scrollChat() {
   container.scrollTop = container.scrollHeight;
 }
 
+// Escape everything first, then re-introduce an explicit allowlist:
+// bold, italic, http(s)/mailto links, and line breaks. The URL character
+// class excludes quotes so a crafted URL can't break out of the href.
 function formatMarkdown(text) {
-  return text
+  return escText(text)
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)"']+|mailto:[^\s)"']+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">$1</a>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*\n]+)\*/g, '<em>$1</em>')
     .replace(/\n\n/g, '<br><br>')

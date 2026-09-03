@@ -105,9 +105,12 @@
           "Prompt-injection isolation at the input boundary",
           "Supabase Auth with mandatory 2FA (TOTP and SMS), AAL2 enforcement, and audited time-boxed impersonation",
           "Rate-limit state in Postgres for multi-replica safety; structural tenant isolation via a tenant-scoped query wrapper with a static tripwire test",
-          "First test suite (Vitest); deployed to Railway behind a gated waitlist"
+          "First test suite (Vitest); deployed to Railway behind a gated waitlist",
+          "The repo is private; Anders can walk through the code on request"
         ],
-        "links": []
+        "links": [
+          { "label": "Live (waitlist)", "href": "https://ktwo.ai" }
+        ]
       },
       {
         "emoji": "🔄",
@@ -217,7 +220,6 @@
     "items": [
       { "icon": "📧", "label": "Email", "value": "andzoe@outlook.com", "href": "mailto:andzoe@outlook.com" },
       { "icon": "💼", "label": "LinkedIn", "value": "linkedin.com/in/anders-zoega", "href": "https://linkedin.com/in/anders-zoega" },
-      { "icon": "📞", "label": "Phone", "value": "(203) 820-0086", "href": "tel:+12038200086" },
       { "icon": "🐙", "label": "GitHub", "value": "github.com/AndersKtwo", "href": "https://github.com/AndersKtwo" }
     ]
   }
