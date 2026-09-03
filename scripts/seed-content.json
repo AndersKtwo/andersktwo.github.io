@@ -1,0 +1,224 @@
+{
+  "header": {
+    "badge": "Open to Internships & Part-Time Roles - Available Now",
+    "name": "Anders Zoega",
+    "subtitle": "Technical Co-Founder • AI Engineer • AI Consultant",
+    "tagline": "Technical co-founder and AI engineer who takes AI into operating businesses end to end: architecture, build, deployment, and the client relationship. Co-founder of Ktwo.ai, an AI operations product for home-services businesses.",
+    "resumePdf": "Anders_Zoega_Resume.pdf"
+  },
+  "about": {
+    "sectionLabel": "// About Me",
+    "sectionTitle": "Building Products That Ship",
+    "paragraphs": [
+      "I'm a <span class=\"highlight\">technical co-founder and AI engineer</span> who takes AI into operating businesses end to end: architecture, build, deployment, and the client relationship. I'm studying AI at the <span class=\"highlight\">University of Miami Business School</span>.",
+      "At <span class=\"highlight\">Ktwo.ai</span> (two co-founders; I own product and engineering), I rebuilt the platform from a Replit-generated prototype into an engineered codebase: an auth migration with <span class=\"highlight\">mandatory 2FA</span>, structural tenant isolation with tripwire tests, a <span class=\"highlight\">deterministic agent orchestrator</span> with prompt-injection isolation, and the repo's first test suite. I also completed a <span class=\"highlight\">paid engagement</span> auditing a venture-backed startup's codebase and AI implementation ahead of its $2.45M raise.",
+      "I'm an <span class=\"highlight\">AI-native builder</span>: Claude Code and Cursor are core to how I work, and I'm drawn to teams putting AI into actual operations rather than demoing it. I'm looking for an <span class=\"highlight\">internship or part-time engineering role</span> at a seed-to-Series A startup, starting now: remote or Miami in-person during the semester, open to relocating for the summer."
+    ],
+    "details": [
+      { "label": "Location", "value": "Miami, FL" },
+      { "label": "University", "value": "University of Miami" },
+      { "label": "School", "value": "University of Miami Business School" },
+      { "label": "Major", "value": "AI for Business Technology" },
+      { "label": "Graduation", "value": "December 2027" },
+      { "label": "Company", "value": "Ktwo.ai LLC" },
+      { "label": "Seeking", "value": "Backend & Full-Stack Roles" },
+      { "label": "Work Authorization", "value": "Authorized to work in the U.S." },
+      { "label": "Languages", "value": "Danish (native), English (fluent)" }
+    ]
+  },
+  "skills": {
+    "sectionLabel": "// Technical Skills",
+    "sectionTitle": "What I Work With",
+    "categories": [
+      {
+        "title": "Languages",
+        "icon": "⚡",
+        "iconBg": "rgba(255,107,157,0.15)",
+        "chipClass": "pink",
+        "chips": ["JavaScript", "TypeScript", "Python", "SQL"]
+      },
+      {
+        "title": "AI Engineering",
+        "icon": "🤖",
+        "iconBg": "var(--accent-dim)",
+        "chipClass": "",
+        "chips": ["Anthropic API / Claude", "Agentic Architectures", "Prompt-Injection Defense", "AI Workflow Automation", "AI-Assisted Dev (Cursor, Claude Code)"]
+      },
+      {
+        "title": "Backend & Infrastructure",
+        "icon": "⚙",
+        "iconBg": "var(--accent2-dim)",
+        "chipClass": "purple",
+        "chips": ["Node.js", "Express", "Supabase (PostgreSQL)", "Drizzle ORM", "REST / SOAP APIs", "Stripe & Webhooks", "Docker", "Railway", "Vitest"]
+      },
+      {
+        "title": "Frontend, Mobile & Tooling",
+        "icon": "📱",
+        "iconBg": "var(--accent-dim)",
+        "chipClass": "",
+        "chips": ["React", "React Native / Expo", "Git / CI-CD"]
+      }
+    ]
+  },
+  "experience": {
+    "sectionLabel": "// Experience",
+    "sectionTitle": "Where I've Built Things",
+    "items": [
+      {
+        "date": "Dec 2025 - Present",
+        "title": "Technical Co-Founder",
+        "org": "Ktwo.ai LLC · Remote",
+        "desc": "Technical co-founder of Ktwo, an AI operations product for home-services businesses (two co-founders; I own product and engineering). Rebuilt the platform from a Replit-generated portal into an engineered codebase: decomposed a 2,500-line route monolith and a 3,600-line dashboard, removed 15k dead lines. Architected a three-stage agent pipeline: a Haiku classifier feeding a deterministic orchestrator, with Sonnet generating responses inside enforced business rules and prompt-injection isolation. Migrated to Supabase Auth with mandatory 2FA (TOTP and SMS), AAL2 enforcement, and audited time-boxed impersonation; moved rate-limit state into Postgres for multi-replica safety and enforced structural tenant isolation via a tenant-scoped query wrapper with a static tripwire test. Introduced the repo's first test suite (Vitest) and deployed to Railway behind a gated waitlist."
+      },
+      {
+        "date": "Sep 2025 - Nov 2025",
+        "title": "AI Consultant",
+        "org": "The Zeya App · Miami, FL (Remote)",
+        "desc": "Contract engagement with a venture-backed consumer marketplace during its pre-seed phase, working directly with the founder and the development team. Audited the codebase, cloud infrastructure, and AI implementation; presented security, architecture, and cost findings with recommendations. Advised on AI integration strategy going into the raise: the company closed a $2.45M seed round following the engagement."
+      },
+      {
+        "date": "Jul 2025 - Nov 2025",
+        "title": "Founder & Lead Engineer",
+        "org": "Ktwo.ai LLC · Remote",
+        "desc": "Built and operated a client portal for small businesses (sole engineer, working with one non-technical partner): analytics dashboards, Stripe billing with webhook signature verification, support ticketing with Slack alerts, and five-tier RBAC. Signed and served the company's first paying client, a Danish wine retailer. After REST and GraphQL attempts failed, cracked the retailer's legacy SOAP/WSDL API and built a catalog sync into Postgres: roughly 430 products with images in about 40 seconds via a field-level diff upsert with orphan deletion. Built a React Native storefront and scaffolded the OnPay-to-DanDomain order loop; the app never launched, blocked on DanDomain's SOAP order API before the engagement ended."
+      }
+    ]
+  },
+  "projects": {
+    "sectionLabel": "// Projects",
+    "sectionTitle": "Things I've Built",
+    "items": [
+      {
+        "emoji": "🤖",
+        "bannerClass": "banner-4",
+        "media": [],
+        "tags": [
+          { "text": "Claude API", "color": "purple" },
+          { "text": "Agentic AI", "color": "" },
+          { "text": "TypeScript", "color": "pink" }
+        ],
+        "title": "Ktwo AI Operations Platform",
+        "desc": "AI operations product for home-services businesses: rebuilt from a Replit-generated prototype into an engineered, tested, production-deployed platform.",
+        "details": [
+          "Decomposed a 2,500-line route monolith and a 3,600-line dashboard; removed 15k dead lines",
+          "Three-stage agent pipeline: Haiku classifier → deterministic orchestrator → Sonnet persona, so business rules are enforced in code, not the prompt",
+          "Prompt-injection isolation at the input boundary",
+          "Supabase Auth with mandatory 2FA (TOTP and SMS), AAL2 enforcement, and audited time-boxed impersonation",
+          "Rate-limit state in Postgres for multi-replica safety; structural tenant isolation via a tenant-scoped query wrapper with a static tripwire test",
+          "First test suite (Vitest); deployed to Railway behind a gated waitlist"
+        ],
+        "links": []
+      },
+      {
+        "emoji": "🔄",
+        "bannerClass": "banner-2",
+        "media": [],
+        "tags": [
+          { "text": "SOAP API", "color": "" },
+          { "text": "Node.js", "color": "purple" },
+          { "text": "React Native", "color": "pink" }
+        ],
+        "title": "Danish E-Commerce Platform",
+        "desc": "Catalog sync and storefront for a Danish wine retailer: dug into a legacy SOAP/WSDL API after REST and GraphQL attempts failed, syncing ~430 products with images in about 40 seconds.",
+        "details": [
+          "Bulk call with field pre-selection; field-level diff upsert with orphan deletion instead of full overwrite",
+          "Three-pass image enrichment with 16-way bounded concurrency and backoff, storing CDN URLs behind an origin-allowlisted proxy",
+          "Owner managed his catalog from the portal with SKU-based editing",
+          "React Native storefront with a scaffolded OnPay-to-DanDomain order loop",
+          "The app never launched, blocked on DanDomain's SOAP order API before the engagement ended"
+        ],
+        "links": []
+      },
+      {
+        "emoji": "🔍",
+        "bannerClass": "banner-3",
+        "media": [],
+        "tags": [
+          { "text": "AI Consulting", "color": "pink" },
+          { "text": "Security", "color": "" },
+          { "text": "Architecture", "color": "purple" }
+        ],
+        "title": "Startup Codebase & AI Audit",
+        "desc": "Paid engagement auditing the codebase, cloud infrastructure, and AI implementation of a venture-backed consumer marketplace ahead of its $2.45M raise.",
+        "details": [
+          "Worked directly with the founder and the development team during the pre-seed phase",
+          "Presented security, architecture, and cost findings with recommendations",
+          "Advised on AI integration strategy going into the raise; the company closed a $2.45M seed round following the engagement"
+        ],
+        "links": []
+      },
+      {
+        "emoji": "🌌",
+        "bannerClass": "banner-1",
+        "media": [],
+        "tags": [
+          { "text": "JavaScript", "color": "" },
+          { "text": "Voronoi", "color": "purple" },
+          { "text": "Playwright", "color": "pink" }
+        ],
+        "title": "Star Citizen Political Map",
+        "desc": "A political map of the Star Citizen universe, drawn the way grand-strategy games draw galaxies: faction territories, hyperlane-style jump routes, and a route planner that respects ship size. One self-contained HTML file, no backend.",
+        "details": [
+          "Double-click any of the 90 systems to open an orbital diagram of every planet, moon, station, and jump point on record, about 860 objects total",
+          "No border is hand-drawn: an ownership resolver decides who owns each system, then a Voronoi pass assigns every point in space to its nearest seed",
+          "Jittered grid of \"void\" seeds keeps deep space neutral; lane seeds make territory follow the jump network instead of blobbing",
+          "Cohesion handling: unclaimed systems get a weighted neutral pocket, and lane seeds are capped at a fixed reach from their endpoint",
+          "The engine has its own cohesion tests, and a Playwright script opens all 90 system views headlessly and fails the build on any page error"
+        ],
+        "links": [
+          { "label": "Live", "href": "https://andersktwo.github.io/SC-map/" }
+        ]
+      },
+      {
+        "emoji": "💬",
+        "bannerClass": "banner-1",
+        "media": [],
+        "tags": [
+          { "text": "Claude API", "color": "purple" },
+          { "text": "Supabase", "color": "" },
+          { "text": "GitHub Pages", "color": "pink" }
+        ],
+        "title": "Interactive Resume Platform",
+        "desc": "This site: a serverless interactive resume with an AI chatbot that answers recruiter questions, plus an analytics and content admin dashboard.",
+        "details": [
+          "AI chatbot powered by Claude via a Supabase Edge Function, with per-email message limits and token tracking",
+          "Visitor analytics with owner-device filtering and a private admin dashboard",
+          "Static hosting on GitHub Pages with serverless functions, no backend to maintain"
+        ],
+        "links": []
+      }
+    ]
+  },
+  "education": {
+    "sectionLabel": "// Education",
+    "sectionTitle": "Where I'm Learning",
+    "logoText": "UM",
+    "degree": "BBA in Artificial Intelligence for Business Technology",
+    "school": "University of Miami Business School",
+    "expected": "December 2027",
+    "activities": "Phi Chi Theta Business Fraternity",
+    "coursework": [
+      "AI Cloud Computing",
+      "Foundations of AI",
+      "Intro to Machine Learning",
+      "Programming Fundamentals",
+      "Programming Algorithms"
+    ]
+  },
+  "additional": [
+    { "icon": "🌎", "name": "Danish (Native)", "detail": "Bilingual: fluent in both Danish and English" },
+    { "icon": "✈", "name": "Licensed Student Pilot", "detail": "FAA Part 61: Private Pilot in training" },
+    { "icon": "🎓", "name": "Phi Chi Theta", "detail": "Professional business fraternity at UM" }
+  ],
+  "contact": {
+    "sectionLabel": "// Get In Touch",
+    "sectionTitle": "Let's Connect",
+    "sectionSubtitle": "I'm always open to discussing new opportunities and interesting problems",
+    "items": [
+      { "icon": "📧", "label": "Email", "value": "andzoe@outlook.com", "href": "mailto:andzoe@outlook.com" },
+      { "icon": "💼", "label": "LinkedIn", "value": "linkedin.com/in/anders-zoega", "href": "https://linkedin.com/in/anders-zoega" },
+      { "icon": "📞", "label": "Phone", "value": "(203) 820-0086", "href": "tel:+12038200086" },
+      { "icon": "🐙", "label": "GitHub", "value": "github.com/AndersKtwo", "href": "https://github.com/AndersKtwo" }
+    ]
+  }
+}

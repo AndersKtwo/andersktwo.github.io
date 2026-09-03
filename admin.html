@@ -956,7 +956,7 @@
         <!-- Skills -->
         <div class="profile-section">
           <h3>⚡ Skills</h3>
-          <p class="section-desc">Technical skill categories with progress bars</p>
+          <p class="section-desc">Technical skill categories with chips</p>
           <div class="field-row">
             <div class="field-group">
               <label class="field-label">Section Label</label>
@@ -1814,7 +1814,7 @@ function addExperience(data) {
 }
 
 function addProject(data) {
-  const d = data || { emoji: '🔧', bannerClass: 'banner-1', media: [], tags: [], title: '', desc: '', details: [] };
+  const d = data || { emoji: '🔧', bannerClass: 'banner-1', media: [], tags: [], title: '', desc: '', details: [], links: [] };
   const container = document.getElementById('projects-repeater');
   const div = document.createElement('div');
   div.className = 'repeater-item';
@@ -1868,6 +1868,10 @@ function addProject(data) {
     <div class="field-group">
       <label class="field-label">Expand Details (one per line)</label>
       <textarea class="field-input proj-details-input" style="min-height:80px;">${(d.details||[]).map(x => escHtml(x)).join('\n')}</textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Links (one per line, format: Label | https://url)</label>
+      <textarea class="field-input proj-links-input" style="min-height:40px;" placeholder="Live | https://example.com">${(d.links||[]).map(l => escHtml(l.label + ' | ' + l.href)).join('\n')}</textarea>
     </div>
   `;
   container.appendChild(div);
@@ -1941,17 +1945,10 @@ function updateMediaCount(el) {
 }
 
 function addSkillCategory(data) {
-  const d = data || { title: '', icon: '⚡', iconBg: 'var(--accent-dim)', fillClass: 'fill-accent', skills: [] };
+  const d = data || { title: '', icon: '⚡', chipClass: '', chips: [] };
   const container = document.getElementById('skills-repeater');
   const div = document.createElement('div');
   div.className = 'repeater-item';
-  const skillsHtml = (d.skills || []).map(s => `
-    <div class="field-row-3" style="margin-bottom:0.4rem;">
-      <div><input class="field-input skill-name" value="${escHtml(s.name)}" placeholder="Skill name"></div>
-      <div></div>
-      <div><input class="field-input skill-pct skill-pct-input" type="number" min="0" max="100" value="${s.pct}"></div>
-    </div>
-  `).join('');
   div.innerHTML = `
     <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">×</button>
     <div class="field-row-3" style="grid-template-columns: 60px 1fr 120px;">
@@ -1964,34 +1961,20 @@ function addSkillCategory(data) {
         <input class="field-input cat-title-input" value="${escHtml(d.title)}">
       </div>
       <div class="field-group">
-        <label class="field-label">Color</label>
-        <select class="field-input cat-fill-input" style="padding:0.5rem;">
-          <option value="fill-accent" ${d.fillClass==='fill-accent'?'selected':''}>Cyan</option>
-          <option value="fill-accent2" ${d.fillClass==='fill-accent2'?'selected':''}>Purple</option>
-          <option value="fill-accent3" ${d.fillClass==='fill-accent3'?'selected':''}>Pink</option>
+        <label class="field-label">Chip Color</label>
+        <select class="field-input cat-chip-class-input" style="padding:0.5rem;">
+          <option value="" ${!d.chipClass?'selected':''}>Cyan</option>
+          <option value="purple" ${d.chipClass==='purple'?'selected':''}>Purple</option>
+          <option value="pink" ${d.chipClass==='pink'?'selected':''}>Pink</option>
         </select>
       </div>
     </div>
     <div class="field-group">
-      <label class="field-label" style="display:flex;justify-content:space-between;"><span>Skills</span><span style="color:var(--text3);">PCT</span></label>
-      <div class="cat-skills-list">${skillsHtml}</div>
-      <button class="add-btn" onclick="addSkillToCategory(this)" style="margin-top:0.35rem;">+ Add Skill</button>
+      <label class="field-label">Skills (comma-separated chips)</label>
+      <textarea class="field-input cat-chips-input" style="min-height:60px;" placeholder="JavaScript, TypeScript, Python">${escHtml((d.chips || []).join(', '))}</textarea>
     </div>
   `;
   container.appendChild(div);
-}
-
-function addSkillToCategory(btn) {
-  const list = btn.previousElementSibling;
-  const row = document.createElement('div');
-  row.className = 'field-row-3';
-  row.style.marginBottom = '0.4rem';
-  row.innerHTML = `
-    <div><input class="field-input skill-name" placeholder="Skill name"></div>
-    <div></div>
-    <div><input class="field-input skill-pct skill-pct-input" type="number" min="0" max="100" value="80"></div>
-  `;
-  list.appendChild(row);
 }
 
 function addAdditional(data) {
@@ -2106,6 +2089,13 @@ function collectProfileData() {
         url: row.querySelector('.proj-media-url-item').value,
         name: row.querySelector('span[style*="max-width"]')?.textContent || '',
       })).filter(m => m.url);
+      const links = el.querySelector('.proj-links-input').value.split('\n')
+        .map(l => l.trim()).filter(Boolean)
+        .map(l => {
+          const [label, ...rest] = l.split('|');
+          return { label: label.trim(), href: rest.join('|').trim() };
+        })
+        .filter(l => l.label && l.href);
       return {
         emoji: el.querySelector('.proj-emoji-input').value,
         bannerClass: el.querySelector('.proj-banner-input').value,
@@ -2114,6 +2104,7 @@ function collectProfileData() {
         title: el.querySelector('.proj-title-input').value,
         desc: el.querySelector('.proj-desc-input').value,
         details: el.querySelector('.proj-details-input').value.split('\n').map(l => l.trim()).filter(Boolean),
+        links,
       };
     }),
   };
@@ -2123,17 +2114,14 @@ function collectProfileData() {
     sectionLabel: document.getElementById('p-skills-label').value,
     sectionTitle: document.getElementById('p-skills-title').value,
     categories: [...document.querySelectorAll('#skills-repeater .repeater-item')].map(el => {
-      const fillClass = el.querySelector('.cat-fill-input').value;
-      const iconBgMap = { 'fill-accent': 'var(--accent-dim)', 'fill-accent2': 'var(--accent2-dim)', 'fill-accent3': 'rgba(255,107,157,0.15)' };
+      const chipClass = el.querySelector('.cat-chip-class-input').value;
+      const iconBgMap = { '': 'var(--accent-dim)', 'purple': 'var(--accent2-dim)', 'pink': 'rgba(255,107,157,0.15)' };
       return {
         title: el.querySelector('.cat-title-input').value,
         icon: el.querySelector('.cat-icon-input').value,
-        iconBg: iconBgMap[fillClass] || 'var(--accent-dim)',
-        fillClass,
-        skills: [...el.querySelectorAll('.cat-skills-list .field-row-3')].map(row => ({
-          name: row.querySelector('.skill-name').value,
-          pct: parseInt(row.querySelector('.skill-pct').value) || 0,
-        })),
+        iconBg: iconBgMap[chipClass] || 'var(--accent-dim)',
+        chipClass,
+        chips: el.querySelector('.cat-chips-input').value.split(',').map(s => s.trim()).filter(Boolean),
       };
     }),
   };
