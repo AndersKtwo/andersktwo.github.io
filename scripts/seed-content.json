@@ -1,6 +1,6 @@
 {
   "header": {
-    "badge": "Open to Internships & Part-Time Roles - Available Now",
+    "badge": "Open to Part-Time & Contract Roles - Available Now",
     "name": "Anders Zoega",
     "subtitle": "Technical Co-Founder • AI Engineer • AI Consultant",
     "tagline": "Technical co-founder and AI engineer who takes AI into operating businesses end to end: architecture, build, deployment, and the client relationship. Co-founder of Ktwo.ai, an AI operations product for home-services businesses.",
@@ -11,7 +11,7 @@
     "sectionTitle": "Building Products That Ship",
     "paragraphs": [
       "I'm a <span class=\"highlight\">technical co-founder and AI engineer</span> who takes AI into operating businesses end to end: architecture, build, deployment, and the client relationship. I'm studying AI at the <span class=\"highlight\">University of Miami Business School</span>.",
-      "At <span class=\"highlight\">Ktwo.ai</span> (two co-founders; I own product and engineering), I rebuilt the platform from a Replit-generated prototype into an engineered codebase: an auth migration with <span class=\"highlight\">mandatory 2FA</span>, structural tenant isolation with tripwire tests, a <span class=\"highlight\">deterministic agent orchestrator</span> with prompt-injection isolation, and the repo's first test suite. I also completed a <span class=\"highlight\">paid engagement</span> auditing a venture-backed startup's codebase and AI implementation ahead of its $2.45M raise.",
+      "At <span class=\"highlight\">Ktwo.ai</span> (two co-founders; I own product and engineering), I rebuilt the platform into an engineered codebase: an auth migration with <span class=\"highlight\">mandatory 2FA</span>, structural tenant isolation with tripwire tests, a <span class=\"highlight\">deterministic agent orchestrator</span> with prompt-injection isolation, and the repo's first test suite. I also completed a <span class=\"highlight\">paid engagement</span> auditing a venture-backed startup's codebase and AI implementation ahead of its $2.45M raise.",
       "I'm an <span class=\"highlight\">AI-native builder</span>: Claude Code and Cursor are core to how I work, and I'm drawn to teams putting AI into actual operations rather than demoing it. I'm looking for an <span class=\"highlight\">internship or part-time engineering role</span> at a seed-to-Series A startup, starting now: remote or Miami in-person during the semester, open to relocating for the summer."
     ],
     "details": [
@@ -68,7 +68,7 @@
         "date": "Dec 2025 - Present",
         "title": "Technical Co-Founder",
         "org": "Ktwo.ai LLC · Remote",
-        "desc": "Technical co-founder of Ktwo, an AI operations product for home-services businesses (two co-founders; I own product and engineering). Rebuilt the platform from a Replit-generated portal into an engineered codebase: decomposed a 2,500-line route monolith and a 3,600-line dashboard, removed 15k dead lines. Architected a three-stage agent pipeline: a Haiku classifier feeding a deterministic orchestrator, with Sonnet generating responses inside enforced business rules and prompt-injection isolation. Migrated to Supabase Auth with mandatory 2FA (TOTP and SMS), AAL2 enforcement, and audited time-boxed impersonation; moved rate-limit state into Postgres for multi-replica safety and enforced structural tenant isolation via a tenant-scoped query wrapper with a static tripwire test. Introduced the repo's first test suite (Vitest) and deployed to Railway behind a gated waitlist."
+        "desc": "Technical co-founder of Ktwo, an AI operations product for home-services businesses (two co-founders; I own product and engineering). Rebuilt the platform into an engineered codebase: decomposed a 2,500-line route monolith and a 3,600-line dashboard, removed 15k dead lines. Architected a three-stage agent pipeline: a Haiku classifier feeding a deterministic orchestrator, with Sonnet generating responses inside enforced business rules and prompt-injection isolation. Migrated to Supabase Auth with mandatory 2FA (TOTP and SMS), AAL2 enforcement, and audited time-boxed impersonation; moved rate-limit state into Postgres for multi-replica safety and enforced structural tenant isolation via a tenant-scoped query wrapper with a static tripwire test. Introduced the repo's first test suite (Vitest) and deployed to Railway behind a gated waitlist."
       },
       {
         "date": "Sep 2025 - Nov 2025",
@@ -98,7 +98,7 @@
           { "text": "TypeScript", "color": "pink" }
         ],
         "title": "Ktwo AI Operations Platform",
-        "desc": "AI operations product for home-services businesses: rebuilt from a Replit-generated prototype into an engineered, tested, production-deployed platform.",
+        "desc": "AI operations product for home-services businesses: rebuilt into an engineered, tested, production-deployed platform.",
         "details": [
           "Decomposed a 2,500-line route monolith and a 3,600-line dashboard; removed 15k dead lines",
           "Three-stage agent pipeline: Haiku classifier → deterministic orchestrator → Sonnet persona, so business rules are enforced in code, not the prompt",
